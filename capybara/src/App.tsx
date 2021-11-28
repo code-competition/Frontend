@@ -1,12 +1,9 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./stylesheets/App.css";
 
 function App() {
-
   const onClick = () => {
-    console.log("Pressed button")
-  }
+    console.log("Pressed button");
+  };
 
   return (
     <div className="App">
