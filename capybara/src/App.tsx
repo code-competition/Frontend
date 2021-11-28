@@ -1,14 +1,10 @@
 import "./stylesheets/App.css";
+import GrassConcept from "./views/GrassConcept";
 
 function App() {
-  const onClick = () => {
-    console.log("Pressed button");
-  };
-
   return (
     <div className="App">
-      <div>Test</div>
-      <button onClick={onClick}>test</button>
+      <GrassConcept />
     </div>
   );
 }
