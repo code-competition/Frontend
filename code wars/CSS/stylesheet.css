@@ -1,0 +1,81 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+#wrapper{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 7fr;
+    height: 100vh;
+    width: 100vw;
+    
+    grid-template-areas: 
+    "nav"
+    "rum"
+    ;
+}
+
+nav {
+    grid-area: nav;
+    width: 100vw;
+    background: rgb(180, 180, 180);
+    display: grid;
+    grid-template-columns: 110px 1fr 110px;
+    grid-template-rows: 1fr;
+    
+}
+
+p {
+    align-self: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+/*Rumrutan*/
+
+#rumruta {
+    grid-area: rum;
+    justify-self: center;
+    align-self: center;
+    background: rgb(180, 180, 180);
+    height: 300px;
+    width: 250px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    border-radius: 5px;
+
+
+}
+
+#icon {
+    height: 100px;
+    width: 100px;
+    padding: 10px;
+    
+}
+
+.button {
+    margin: 20px;
+    padding: 20px;
+}
+
+#rcode{
+    background: white;
+    border-radius: 10px;
+    color: gray;
+}
+#Join {
+    background: lightgrey;
+    border-radius: 10px;
+}
+
+#Create{
+    background: lightgrey;
+    border-radius: 10px
+}
