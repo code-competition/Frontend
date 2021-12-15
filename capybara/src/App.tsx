@@ -1,10 +1,10 @@
 import "./stylesheets/App.css";
-import GrassConcept from "./views/GrassConcept";
+import Home from "./views/Home";
 
 function App() {
   return (
     <div className="App">
-      <GrassConcept />
+      <Home />
     </div>
   );
 }
