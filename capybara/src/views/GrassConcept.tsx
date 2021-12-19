@@ -30,7 +30,6 @@ function GrassConcept() {
 
       case ClickAction.SendMessage:
         if (socket != null) {
-          console.log(socket);
           socket.send(message);
         }
         break;
