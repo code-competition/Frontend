@@ -8,7 +8,7 @@ enum ReadyState {
   Closed = 3,
 }
 
-enum WebSocketEvents {
+export enum WebSocketEvents {
   Close = "close",
   Error = "error",
   Message = "message",
@@ -31,7 +31,7 @@ interface WebSocketEventMap {
   retry: RetryEvent;
 }
 
-type EventListener<K extends WebSocketEvents> = (
+export type EventListener<K extends WebSocketEvents> = (
   instance: ImprovedWebSocket,
   ev: WebSocketEventMap[K]
 ) => any;
@@ -65,6 +65,7 @@ class ImprovedWebSocket {
     retry: [],
   };
   private ws?: WebSocket;
+  private running = false;
 
   constructor(url: string, protocols?: Protocols, backoff?: Backoff) {
     this.url = url;
@@ -79,8 +80,16 @@ class ImprovedWebSocket {
       this.maxRetries =
         backoff.maxRetries === undefined ? 8 : backoff.maxRetries;
     }
+  }
 
-    this.tryConnect();
+  public run(): this {
+    if (!this.running) {
+      this.running = true;
+      this.tryConnect();
+      console.log("running");
+    }
+
+    return this;
   }
 
   public bufferedAmount(): number | undefined {
@@ -101,12 +110,19 @@ class ImprovedWebSocket {
     if (this.ws) this.ws.close(code, reason);
   }
 
+  public on(
+    type: WebSocketEvents,
+    listener: EventListener<WebSocketEvents>
+  ): this {
+    this.addEventListener(type, listener);
+    return this;
+  }
+
   public addEventListener<K extends WebSocketEvents>(
     type: K,
     listener: EventListener<K>
   ): this {
     (this.eventListeners[type] as EventListener<K>[]).push(listener);
-
     return this;
   }
 
