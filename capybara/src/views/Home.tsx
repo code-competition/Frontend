@@ -6,52 +6,69 @@ import ImprovedWebSocket, {
   EventListener,
 } from "../utils/improvedWebSocket";
 
-// bonfire create game
-// interface CreateGameResponse {
-//   game_id: String;
-// }
-
 interface HomeProps {
   setConnection: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
 }
 
-interface HelloMessage {
-  id: string;
-}
-
 function Home({ setConnection }: HomeProps) {
   let navigate = useNavigate();
-  let [gameId, setGameId] = useState<String>("");
+
+  let [ws, setWS] = useState<ImprovedWebSocket | null>(null);
+  let [gameId, setGameId] = useState<string>("");
+  let [hasJoined, setHasJoined] = useState<boolean>(false);
 
   const initiateGame: EventListener<WebSocketEvents.Message> = (
-    _,
+    instance: ImprovedWebSocket,
     ev: MessageEvent<any>
   ) => {
     let op = JSON.parse(ev.data).op;
-    let d = JSON.parse(ev.data).d;
-    console.log(op);
+    let data = JSON.parse(ev.data).d;
 
     switch (op) {
       case "Hello":
-        console.log(`Connected to the server with the id: ${d.id}`);
-        console.log("Creating game...");
+        console.log(`Connected to the server with the id: ${data.id}`);
 
-        // fix this as it will always be null because of async
-        if (ws !== null) {
-          ws.send(
-            JSON.stringify({ d: { d: {}, op: "Create" }, op: "Request" })
-          );
-        }
+        // Identify the user after establishing a connection to the server
+        instance.send(
+          JSON.stringify({
+            d: { d: { nickname: "StarToLeft" }, op: "Identify" },
+            op: "Request",
+          })
+        );
         break;
       case "Response":
-        if (d.op === "Create") {
-          console.log(d);
+        switch (data.op) {
+          case "Identify":
+            if (data.d.success) {
+              // Create a new game after the user has been identified
+              instance.send(
+                JSON.stringify({ d: { d: {}, op: "Create" }, op: "Request" })
+              );
+            } else {
+              console.log("Could not identify the user");
+            }
+            break;
+          case "Create":
+            let newGameId: string = data.d.game_id;
+
+            // Join the game after creation
+            instance.send(
+              JSON.stringify({
+                d: { d: { game_id: newGameId }, op: "Join" },
+                op: "Request",
+              })
+            );
+
+            setGameId(newGameId);
+            break;
+          case "Join":
+            if (data.d.is_host) setHasJoined(true);
+            else console.log("User is not host");
+            break;
         }
         break;
     }
   };
-
-  let [ws, setWS] = useState<ImprovedWebSocket | null>(null);
 
   const handleClick = () => {
     // We will be using bonfire in the future, but for debugging purposes we are currently using WS instead
@@ -80,14 +97,16 @@ function Home({ setConnection }: HomeProps) {
   };
 
   useEffect(() => {
-    if (gameId !== "") {
+    if (gameId !== "" && hasJoined) {
       if (ws !== null) {
         ws.removeEventListener(WebSocketEvents.Message, initiateGame);
+        setConnection(ws);
+        navigate(`/lobby/${gameId}`);
+      } else {
+        console.log("websocket was null");
       }
-      navigate(`/lobby/${gameId}`);
-      console.log("Navigated to lobby");
     }
-  }, [gameId]);
+  }, [gameId, hasJoined, ws, setConnection, navigate]);
 
   return (
     <section>
@@ -95,5 +114,4 @@ function Home({ setConnection }: HomeProps) {
     </section>
   );
 }
-export default Home;
 export default Home;

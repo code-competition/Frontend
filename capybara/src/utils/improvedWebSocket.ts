@@ -86,7 +86,6 @@ class ImprovedWebSocket {
     if (!this.running) {
       this.running = true;
       this.tryConnect();
-      console.log("running");
     }
 
     return this;
@@ -137,6 +136,12 @@ class ImprovedWebSocket {
     });
 
     return this;
+  }
+
+  public getEventListeners<K extends WebSocketEvents>(
+    type: K
+  ): WebSocketEventListeners[K] {
+    return this.eventListeners[type];
   }
 
   private tryConnect(): void {
