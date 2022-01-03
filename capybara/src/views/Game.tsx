@@ -1,16 +1,23 @@
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import CodeEditor from "../components/CodeEditor";
+import { Task } from "../interfaces/game";
 import ImprovedWebSocket from "../utils/improvedWebSocket";
 
 interface GameProps {
   ws: ImprovedWebSocket | null;
+  task: Task;
 }
 
-function Game({ ws }: GameProps) {
+function Game({ ws, task }: GameProps) {
+  let navigate = useNavigate();
   const gameId = useParams().id;
+
+  console.log(task);
 
   return (
     <div>
-      <p> {gameId}</p>
+      <CodeEditor />
     </div>
   );
 }
