@@ -1,24 +1,16 @@
-import {
-  Dispatch,
-  ReactElement,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Task } from "../../interfaces/game";
 import "../../stylesheets/Lobby.css";
 import ImprovedWebSocket, {
   WebSocketEvents,
 } from "../../utils/improvedWebSocket";
-import Game from "../Game";
 
 // Create a host lobby (this) and a separate user lobby
 
 interface HostLobbyProps {
   ws: ImprovedWebSocket | null;
-  game: ReactElement | null;
-  setGame: Dispatch<SetStateAction<ReactElement | null>>;
+  taskCount: number | null;
+  setTaskCount: Dispatch<SetStateAction<number | null>>;
 }
 
 interface User {
@@ -26,12 +18,11 @@ interface User {
   name: string;
 }
 
-function HostLobby({ ws, game, setGame }: HostLobbyProps) {
+function HostLobby({ ws, taskCount, setTaskCount }: HostLobbyProps) {
   const gameId = useParams().id;
   let navigate = useNavigate();
 
   let [connectedUsers, setConnectedUsers] = useState<User[]>([]);
-  let [taskCount, setTaskCount] = useState<number>(1);
 
   const userJoinListener = (_: ImprovedWebSocket, ev: MessageEvent<any>) => {
     let op = JSON.parse(ev.data).op;
@@ -55,32 +46,13 @@ function HostLobby({ ws, game, setGame }: HostLobbyProps) {
   };
 
   const startGameListener = (_: ImprovedWebSocket, ev: MessageEvent<any>) => {
-    // Change the api a bit as the start signal is useless with the task right afterwards.
-
     let op = JSON.parse(ev.data).op;
     let data = JSON.parse(ev.data).d;
 
-    if (op === "GameEvent") {
-      switch (data.op) {
-        case "Start":
-          setTaskCount(data.event.task_count);
-          break;
-        case "Task":
-          if (ws !== null)
-            ws.removeEventListener(WebSocketEvents.Message, startGameListener);
-
-          let taskData = data.event.task;
-          let task: Task = {
-            taskCount: taskCount,
-            currentTask: 0,
-            taskId: taskData.task_id,
-            question: taskData.question,
-            testCases: taskData.public_test_cases,
-          };
-
-          setGame(<Game ws={ws} task={task} />);
-          break;
-      }
+    if (op === "GameEvent" && data.op === "Start") {
+      setTaskCount(data.event.task_count);
+      if (ws !== null)
+        ws.removeEventListener(WebSocketEvents.Message, startGameListener);
     }
   };
 
@@ -98,10 +70,10 @@ function HostLobby({ ws, game, setGame }: HostLobbyProps) {
   };
 
   useEffect(() => {
-    if (game !== null) {
+    if (taskCount !== null) {
       navigate(`/game/${gameId}`);
     }
-  }, [game, navigate, gameId]);
+  }, [taskCount, navigate, gameId]);
 
   useEffect(() => {
     if (

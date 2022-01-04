@@ -1,22 +1,22 @@
-import { Dispatch, ReactElement, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import ImprovedWebSocket from "../utils/improvedWebSocket";
 import HostLobby from "./Lobby/HostLobby";
 import UserLobby from "./Lobby/UserLobby";
 
 interface LobbyProps {
   ws: ImprovedWebSocket | null;
-  game: ReactElement | null;
-  setGame: Dispatch<SetStateAction<ReactElement | null>>;
+  taskCount: number | null;
+  setTaskCount: Dispatch<SetStateAction<number | null>>;
   isHost: boolean;
 }
 
-function Lobby({ isHost, ws, game, setGame }: LobbyProps) {
+function Lobby({ isHost, ws, taskCount, setTaskCount }: LobbyProps) {
   return (
     <section>
       {isHost ? (
-        <HostLobby ws={ws} game={game} setGame={setGame} />
+        <HostLobby ws={ws} taskCount={taskCount} setTaskCount={setTaskCount} />
       ) : (
-        <UserLobby ws={ws} game={game} setGame={setGame} />
+        <UserLobby ws={ws} taskCount={taskCount} setTaskCount={setTaskCount} />
       )}
     </section>
   );

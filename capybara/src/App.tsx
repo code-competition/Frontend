@@ -5,11 +5,12 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./views/Home";
 import Lobby from "./views/Lobby";
 import ImprovedWebSocket from "./utils/improvedWebSocket";
+import Game from "./views/Game";
 
 function App() {
   let navigate = useNavigate();
   let [webSocket, setWebSocket] = useState<ImprovedWebSocket | null>(null);
-  let [game, setGame] = useState<ReactElement | null>(null);
+  let [taskCount, setTaskCount] = useState<number | null>(null);
   let [isHost, setIsHost] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -34,13 +35,16 @@ function App() {
           element={
             <Lobby
               ws={webSocket}
-              game={game}
-              setGame={setGame}
+              taskCount={taskCount}
+              setTaskCount={setTaskCount}
               isHost={isHost as boolean}
             />
           }
         />
-        <Route path="/game/:id" element={game} />
+        <Route
+          path="/game/:id"
+          element={<Game ws={webSocket} taskCount={taskCount as number} />}
+        />
       </Routes>
     </div>
   );
