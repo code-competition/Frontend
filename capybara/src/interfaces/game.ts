@@ -14,5 +14,5 @@ export interface PublicTestProgress {
   expected: string;
   stdout: string;
   succeeded: boolean;
-  text_index: number;
+  test_index: number;
 }

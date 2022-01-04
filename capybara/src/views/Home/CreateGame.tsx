@@ -106,7 +106,7 @@ function CreateGame({ isHost, setIsHost, setWebSocket }: CreateGameProps) {
         console.log("websocket was null");
       }
     }
-  }, [gameId, isHost, ws, setWebSocket, navigate]);
+  }, [gameId, isHost, ws, setWebSocket, navigate, initiateGameListener]);
 
   return <button onClick={handleClick}>Create game</button>;
 }

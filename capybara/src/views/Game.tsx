@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import CodeEditor from "../components/CodeEditor";
-import { PublicTestProgress, Task } from "../interfaces/game";
+import { PublicTestProgress } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import TestCode from "./Game/TestCode";
 
@@ -16,34 +15,32 @@ interface TestCase {
   expected: string;
 }
 
-interface ExpectedOutput {
+interface TestOutput {
   id: number;
   got: string;
 }
 
 function Game({ ws, taskCount }: GameProps) {
-  let [taskIndex, setTaskIndex] = useState<number>(0);
+  let [taskIndex /*, setTaskIndex */] = useState<number>(0);
 
   let [code, setCode] = useState<string>("");
   let [error, setError] = useState<string>("");
 
   let [testCases, setTestCases] = useState<TestCase[]>([]);
-  let [expectedOutput, setExpectedOutput] = useState<ExpectedOutput[]>([]);
+  let [testOutputs, setTestOutputs] = useState<TestOutput[]>([]);
   let [question, setQuestion] = useState<string>("");
-
-  let navigate = useNavigate();
-  const gameId = useParams().id;
 
   const testResultListener = (_: ImprovedWebSocket, ev: MessageEvent) => {
     let op = JSON.parse(ev.data).op;
     let data = JSON.parse(ev.data).d;
 
     if (op === "Response" && data.op === "Compile") {
-      //       setExpectedOutput(
-      //         data.d.public_test_progress.map(
-      //           (test: PublicTestProgress) => test.stdout
-      //         )
-      //       );
+      setTestOutputs(
+        data.d.public_test_progress.map((test: PublicTestProgress) => ({
+          id: test.test_index,
+          got: test.stdout,
+        }))
+      );
       setError(data.d.stderr);
     }
   };
@@ -53,15 +50,22 @@ function Game({ ws, taskCount }: GameProps) {
     let data = JSON.parse(ev.data).d;
 
     if (op === "Response" && data.op === "Task") {
-      let taskData = data.d.task;
-      console.log(taskData);
+      let task = data.d.task;
+      setQuestion(task.question);
+      setTestCases(
+        task.public_test_cases.sort((testCase: TestCase) => testCase.id)
+      );
     }
   };
 
   useEffect(() => {
     if (ws !== null) {
-      if (taskIndex === 0)
+      if (
+        !ws.getEventListeners(WebSocketEvents.Message).includes(getTaskListener)
+      ) {
+        console.log(ws.getEventListeners(WebSocketEvents.Message));
         ws.addEventListener(WebSocketEvents.Message, getTaskListener);
+      }
 
       ws.send(
         JSON.stringify({
@@ -91,20 +95,27 @@ function Game({ ws, taskCount }: GameProps) {
         taskIndex={taskIndex}
       />
 
+      <p>Question: {question}</p>
+      {testCases.map((testCase) => {
+        return (
+          <div key={testCase.id}>
+            <p>stdin: {testCase.stdin}</p>
+            <p>Expected: {testCase.expected}</p>
+            <p>
+              Got:
+              {
+                testOutputs.filter(
+                  (output: TestOutput) => output.id === testCase.id
+                )[0]?.got
+              }
+            </p>
+          </div>
+        );
+      })}
+
       <div></div>
     </div>
   );
 }
-
-//       <p>Question: {task.question}</p>
-//         {task.testCases.map((testCase, i) => {
-//           return (
-//             <div key={i}>
-//               <p>stdin: {testCase.stdin}</p>
-//               <p>Expected: {testCase.expected}</p>
-//               <p>Got: {expectedOutput[i]}</p>
-//             </div>
-//           );
-//         })}
 
 export default Game;

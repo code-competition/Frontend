@@ -29,8 +29,12 @@ function TestCode({ ws, listener, code, taskIndex }: TestCodeProps) {
   };
 
   useEffect(() => {
-    if (ws !== null) ws.addEventListener(WebSocketEvents.Message, listener);
-  }, []);
+    if (
+      ws !== null &&
+      ws.getEventListeners(WebSocketEvents.Message).includes(listener)
+    )
+      ws.addEventListener(WebSocketEvents.Message, listener);
+  }, [ws, listener]);
   return <button onClick={handleClick}>Test</button>;
 }
 export default TestCode;
