@@ -1,0 +1,32 @@
+/* Font */
+
+:root {
+  --heading-font: "Source Sans Pro", sans-serif;
+  --text-font: "Source Sans Pro", sans-serif;
+  --code-font: "Source Code Pro", monospace;
+}
+
+/* Color */
+
+:root {
+  --color-text-default: #042d4b;
+  --color-text-dimmer: #475966;
+  --color-text-invert: #fffdfb;
+
+  --color-accent: #d2d2d2;
+
+  --color-bg-root: #ede9e6;
+  --color-bg-default: #fffdfb;
+
+  --color-primary: #ff5900;
+  --color-secondary: #0b93f4;
+  --color-positive: #19cc95;
+  --color-negative-stronger: #feeef2;
+  --color-negative: #ede9e6;
+}
+
+/* General */
+
+:root {
+  --border-radius: 4px;
+}

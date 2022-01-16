@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "../../stylesheets/Lobby.css";
 import ImprovedWebSocket, {
   WebSocketEvents,
 } from "../../utils/improvedWebSocket";

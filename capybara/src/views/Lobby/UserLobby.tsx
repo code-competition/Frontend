@@ -1,7 +1,6 @@
 import ImprovedWebSocket, {
   WebSocketEvents,
 } from "../../utils/improvedWebSocket";
-import "../../stylesheets/Lobby.css";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 

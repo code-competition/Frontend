@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import "../stylesheets/Home.css";
 import ImprovedWebSocket from "../utils/improvedWebSocket";
 import CreateGame from "./Home/CreateGame";
 import JoinGame from "./Home/JoinGame";
