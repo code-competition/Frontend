@@ -41,6 +41,7 @@ function Game({ ws, taskCount }: GameProps) {
           got: test.stdout,
         }))
       );
+
       setError(data.d.stderr);
     }
   };
@@ -63,7 +64,6 @@ function Game({ ws, taskCount }: GameProps) {
       if (
         !ws.getEventListeners(WebSocketEvents.Message).includes(getTaskListener)
       ) {
-        console.log(ws.getEventListeners(WebSocketEvents.Message));
         ws.addEventListener(WebSocketEvents.Message, getTaskListener);
       }
 

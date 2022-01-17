@@ -63,7 +63,7 @@ function JoinGame({ isHost, setIsHost, setWebSocket }: JoinGameProps) {
   const handleClick = () => {
     setWS(
       new ImprovedWebSocket(
-        "ws://localhost:5000",
+        "ws://192.168.194.62:5000",
         window.location.pathname.replace(/\//gi, "-")
       )
         .addEventListener(WebSocketEvents.Message, joinGameListener)
