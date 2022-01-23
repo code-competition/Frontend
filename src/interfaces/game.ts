@@ -16,3 +16,7 @@ export interface PublicTestProgress {
   succeeded: boolean;
   test_index: number;
 }
+
+export interface Player {
+  isHost: boolean;
+}

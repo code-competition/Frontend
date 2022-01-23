@@ -51,13 +51,21 @@ function HostLobby({ ws, taskCount, setTaskCount }: HostLobbyProps) {
     if (op === "GameEvent" && data.op === "Start") {
       setTaskCount(data.event.task_count);
       if (ws !== null)
-        ws.removeEventListener(WebSocketEvents.Message, startGameListener);
+        ws.removeEventListener(
+          WebSocketEvents.Message,
+          "hostStartGame",
+          startGameListener
+        );
     }
   };
 
   const handleClick = () => {
     if (ws !== null) {
-      ws.addEventListener(WebSocketEvents.Message, startGameListener);
+      ws.addEventListener(
+        WebSocketEvents.Message,
+        "hostStartGame",
+        startGameListener
+      );
 
       ws.send(
         JSON.stringify({
@@ -77,9 +85,13 @@ function HostLobby({ ws, taskCount, setTaskCount }: HostLobbyProps) {
   useEffect(() => {
     if (
       ws !== null &&
-      !ws.getEventListeners(WebSocketEvents.Message).includes(userJoinListener)
+      !ws.getEventListeners(WebSocketEvents.Message).includes("userJoin")
     ) {
-      ws.addEventListener(WebSocketEvents.Message, userJoinListener);
+      ws.addEventListener(
+        WebSocketEvents.Message,
+        "userJoin",
+        userJoinListener
+      );
     }
   }, [ws, navigate, gameId]);
 

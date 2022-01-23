@@ -21,7 +21,11 @@ function UserLobby({ ws, taskCount, setTaskCount }: UserLobbyProps) {
     if (op === "GameEvent" && data.op === "Start") {
       setTaskCount(data.event.task_count);
       if (ws !== null)
-        ws.removeEventListener(WebSocketEvents.Message, startGameListener);
+        ws.removeEventListener(
+          WebSocketEvents.Message,
+          "userStartGame",
+          startGameListener
+        );
     }
   };
 
@@ -34,9 +38,13 @@ function UserLobby({ ws, taskCount, setTaskCount }: UserLobbyProps) {
   useEffect(() => {
     if (
       ws !== null &&
-      !ws.getEventListeners(WebSocketEvents.Message).includes(startGameListener)
+      !ws.getEventListeners(WebSocketEvents.Message).includes("userStartGame")
     ) {
-      ws.addEventListener(WebSocketEvents.Message, startGameListener);
+      ws.addEventListener(
+        WebSocketEvents.Message,
+        "userStartGame",
+        startGameListener
+      );
     }
   }, [ws, navigate, gameId]);
 

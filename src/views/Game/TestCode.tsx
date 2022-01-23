@@ -6,11 +6,18 @@ import ImprovedWebSocket from "../../utils/improvedWebSocket";
 interface TestCodeProps {
   ws: ImprovedWebSocket | null;
   listener: EventListener<WebSocketEvents.Message>;
+  listenerId: string;
   code: string;
   taskIndex: number;
 }
 
-function TestCode({ ws, listener, code, taskIndex }: TestCodeProps) {
+function TestCode({
+  ws,
+  listener,
+  listenerId,
+  code,
+  taskIndex,
+}: TestCodeProps) {
   const handleClick = () => {
     if (ws !== null) {
       ws.send(
@@ -31,9 +38,9 @@ function TestCode({ ws, listener, code, taskIndex }: TestCodeProps) {
   useEffect(() => {
     if (
       ws !== null &&
-      !ws.getEventListeners(WebSocketEvents.Message).includes(listener)
+      !ws.getEventListeners(WebSocketEvents.Message).includes(listenerId)
     ) {
-      ws.addEventListener(WebSocketEvents.Message, listener);
+      ws.addEventListener(WebSocketEvents.Message, listenerId, listener);
     }
   }, []);
   return <button onClick={handleClick}>Test</button>;

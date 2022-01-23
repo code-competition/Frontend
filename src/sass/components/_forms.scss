@@ -1,0 +1,37 @@
+.ph-c-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__item {
+    margin: 10px 0;
+  }
+}
+
+.ph-c-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 320px;
+
+  &__label {
+  }
+
+  &__textbox {
+    @extend .ph-b-body--normal;
+
+    border: 1px solid var(--color-outline-default);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-subtle);
+
+    padding-left: 14px;
+    height: 44px;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--color-primary-default);
+    }
+  }
+}

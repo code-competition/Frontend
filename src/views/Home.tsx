@@ -1,29 +1,32 @@
 import { Dispatch, SetStateAction } from "react";
+import { Player } from "../interfaces/game";
 import ImprovedWebSocket from "../utils/improvedWebSocket";
-import CreateGame from "./Home/CreateGame";
-import JoinGame from "./Home/JoinGame";
+import CreateGameButton from "./Home/CreateGameButton";
+import JoinGameButton from "./Home/JoinGameButton";
 
 interface HomeProps {
   setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
-  isHost: boolean | null;
-  setIsHost: Dispatch<SetStateAction<boolean | null>>;
+  webSocket: ImprovedWebSocket | null;
+  player: Player | null;
+  setPlayer: Dispatch<SetStateAction<Player | null>>;
 }
 
-function Home({ isHost, setIsHost, setWebSocket }: HomeProps) {
+function Home({ player, setPlayer, webSocket, setWebSocket }: HomeProps) {
   return (
-    <section>
-      <CreateGame
-        isHost={isHost}
-        setIsHost={setIsHost}
-        setWebSocket={setWebSocket}
-      />
+    <main className="ph-l-home">
+      <div className="ph-l-home__buttons">
+        <CreateGameButton
+          player={player}
+          setPlayer={setPlayer}
+          setWebSocket={setWebSocket}
+        />
 
-      <JoinGame
-        isHost={isHost}
-        setIsHost={setIsHost}
-        setWebSocket={setWebSocket}
-      />
-    </section>
+        <JoinGameButton webSocket={webSocket} setWebSocket={setWebSocket} />
+      </div>
+    </main>
   );
 }
 export default Home;
+
+// TODO
+// Move join game to a new address

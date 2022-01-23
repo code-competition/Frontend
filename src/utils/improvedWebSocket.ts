@@ -36,12 +36,17 @@ export type EventListener<K extends WebSocketEvents> = (
   ev: WebSocketEventMap[K]
 ) => any;
 
+interface StoredEventListener<K extends WebSocketEvents> {
+  id: string;
+  listener: (instance: ImprovedWebSocket, ev: WebSocketEventMap[K]) => any;
+}
+
 interface WebSocketEventListeners {
-  open: EventListener<WebSocketEvents.Open>[];
-  close: EventListener<WebSocketEvents.Close>[];
-  error: EventListener<WebSocketEvents.Error>[];
-  message: EventListener<WebSocketEvents.Message>[];
-  retry: EventListener<WebSocketEvents.Retry>[];
+  open: StoredEventListener<WebSocketEvents.Open>[];
+  close: StoredEventListener<WebSocketEvents.Close>[];
+  error: StoredEventListener<WebSocketEvents.Error>[];
+  message: StoredEventListener<WebSocketEvents.Message>[];
+  retry: StoredEventListener<WebSocketEvents.Retry>[];
 }
 
 interface Backoff {
@@ -109,39 +114,44 @@ class ImprovedWebSocket {
     if (this.ws) this.ws.close(code, reason);
   }
 
-  public on(
-    type: WebSocketEvents,
-    listener: EventListener<WebSocketEvents>
-  ): this {
-    this.addEventListener(type, listener);
-    return this;
-  }
-
   public addEventListener<K extends WebSocketEvents>(
     type: K,
+    id: string,
     listener: EventListener<K>
   ): this {
-    (this.eventListeners[type] as EventListener<K>[]).push(listener);
+    (this.eventListeners[type] as StoredEventListener<K>[]).push({
+      id,
+      listener,
+    });
     return this;
   }
 
   public removeEventListener<K extends WebSocketEvents>(
     type: K,
-    listener: EventListener<K>
+    id?: string,
+    listener?: EventListener<K>
   ): this {
-    (this.eventListeners[type] as EventListener<K>[]) = (
-      this.eventListeners[type] as EventListener<K>[]
-    ).filter((l: EventListener<K>) => {
-      return l !== listener;
-    });
+    if (id !== undefined) {
+      (this.eventListeners[type] as StoredEventListener<K>[]) = (
+        this.eventListeners[type] as StoredEventListener<K>[]
+      ).filter((evl: StoredEventListener<K>) => {
+        return evl.listener !== listener;
+      });
+    } else {
+      (this.eventListeners[type] as StoredEventListener<K>[]) = (
+        this.eventListeners[type] as StoredEventListener<K>[]
+      ).filter((evl: StoredEventListener<K>) => {
+        return evl.id !== id;
+      });
+    }
 
     return this;
   }
 
-  public getEventListeners<K extends WebSocketEvents>(
-    type: K
-  ): WebSocketEventListeners[K] {
-    return this.eventListeners[type];
+  public getEventListeners<K extends WebSocketEvents>(type: K): string[] {
+    return (this.eventListeners[type] as StoredEventListener<K>[]).map(
+      (evl: StoredEventListener<K>) => (evl as StoredEventListener<K>).id
+    );
   }
 
   private tryConnect(): void {
@@ -198,9 +208,9 @@ class ImprovedWebSocket {
     type: K,
     ev: WebSocketEventMap[K]
   ) {
-    (this.eventListeners[type] as EventListener<K>[]).forEach(
-      (listener: EventListener<K>) => {
-        listener(this, ev);
+    (this.eventListeners[type] as StoredEventListener<K>[]).forEach(
+      (evl: StoredEventListener<K>) => {
+        evl.listener(this, ev);
       }
     );
   }

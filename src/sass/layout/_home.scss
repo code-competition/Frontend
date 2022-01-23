@@ -1,0 +1,14 @@
+.ph-l-home {
+  @include flex-center;
+
+  height: 100%;
+  width: 100%;
+  background: var(--color-background-root);
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+
+    width: 400px;
+  }
+}

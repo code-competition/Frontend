@@ -61,10 +61,12 @@ function Game({ ws, taskCount }: GameProps) {
 
   useEffect(() => {
     if (ws !== null) {
-      if (
-        !ws.getEventListeners(WebSocketEvents.Message).includes(getTaskListener)
-      ) {
-        ws.addEventListener(WebSocketEvents.Message, getTaskListener);
+      if (!ws.getEventListeners(WebSocketEvents.Message).includes("getTask")) {
+        ws.addEventListener(
+          WebSocketEvents.Message,
+          "getTask",
+          getTaskListener
+        );
       }
 
       ws.send(
@@ -91,6 +93,7 @@ function Game({ ws, taskCount }: GameProps) {
       <TestCode
         ws={ws}
         listener={testResultListener}
+        listenerId={"testResult"}
         code={code}
         taskIndex={taskIndex}
       />

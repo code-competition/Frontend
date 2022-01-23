@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button, { ButtonKind, ButtonSize } from "../../components/Button";
+import { Player } from "../../interfaces/game";
 import ImprovedWebSocket, {
   WebSocketEvents,
   EventListener,
@@ -7,11 +9,15 @@ import ImprovedWebSocket, {
 
 interface CreateGameProps {
   setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
-  isHost: boolean | null;
-  setIsHost: Dispatch<SetStateAction<boolean | null>>;
+  player: Player | null;
+  setPlayer: Dispatch<SetStateAction<Player | null>>;
 }
 
-function CreateGame({ isHost, setIsHost, setWebSocket }: CreateGameProps) {
+function CreateGameButton({
+  player,
+  setPlayer,
+  setWebSocket,
+}: CreateGameProps) {
   let navigate = useNavigate();
 
   let [ws, setWS] = useState<ImprovedWebSocket | null>(null);
@@ -62,8 +68,8 @@ function CreateGame({ isHost, setIsHost, setWebSocket }: CreateGameProps) {
             setGameId(newGameId);
             break;
           case "Join":
-            if (data.d.is_host) setIsHost(true);
-            else setIsHost(false);
+            if (data.d.is_host) setPlayer({ isHost: true });
+            else setPlayer({ isHost: false });
             break;
         }
         break;
@@ -91,23 +97,35 @@ function CreateGame({ isHost, setIsHost, setWebSocket }: CreateGameProps) {
         "ws://localhost:5000",
         window.location.pathname.replace(/\//gi, "-")
       )
-        .addEventListener(WebSocketEvents.Message, initiateGameListener)
+        .addEventListener(
+          WebSocketEvents.Message,
+          "initiateGame",
+          initiateGameListener
+        )
         .run()
     );
   };
 
   useEffect(() => {
-    if (gameId !== "" && isHost !== null) {
+    if (gameId !== "" && player !== null) {
       if (ws !== null) {
-        ws.removeEventListener(WebSocketEvents.Message, initiateGameListener);
+        ws.removeEventListener(WebSocketEvents.Message, "initiateGame");
         setWebSocket(ws);
         navigate(`/lobby/${gameId}`);
       } else {
         console.log("websocket was null");
       }
     }
-  }, [gameId, isHost, ws, setWebSocket, navigate, initiateGameListener]);
+  }, [gameId, player, ws, setWebSocket, navigate]);
 
-  return <button onClick={handleClick}>Create game</button>;
+  return (
+    <Button
+      kind={ButtonKind.Primary}
+      btnsize={ButtonSize.Default}
+      onClick={handleClick}
+    >
+      Create game
+    </Button>
+  );
 }
-export default CreateGame;
+export default CreateGameButton;

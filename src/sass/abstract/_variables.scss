@@ -1,32 +1,63 @@
 /* Font */
 
 :root {
-  --heading-font: "Source Sans Pro", sans-serif;
-  --text-font: "Source Sans Pro", sans-serif;
-  --code-font: "Source Code Pro", monospace;
+  --font-header: "Source Sans Pro", sans-serif;
+  --font-subheader: "Source Sans Pro", sans-serif;
+  --font-body: "Source Sans Pro", sans-serif;
+  --font-code: "Source Code Pro", monospace;
+  --font-button: "Source Sans Pro", sans-serif;
 }
 
 /* Color */
 
 :root {
-  --color-text-default: #042d4b;
-  --color-text-dimmer: #475966;
-  --color-text-invert: #fffdfb;
+  --color-black: #041725;
+  --color-white: #ffffff;
 
-  --color-accent: #d2d2d2;
+  --color-foreground-dimmest: #6c8293;
+  --color-foreground-dimmer: #244660;
+  --color-foreground-default: #082b45;
 
-  --color-bg-root: #ede9e6;
-  --color-bg-default: #fffdfb;
+  --color-background-root: #ecedee;
+  --color-background-default: #fcfdfd;
+  --color-background-higher: #f4f5f5;
+  --color-background-highest: #e4e7e7;
 
-  --color-primary: #ff5900;
-  --color-secondary: #0b93f4;
-  --color-positive: #19cc95;
-  --color-negative-stronger: #feeef2;
-  --color-negative: #ede9e6;
+  --color-outline-dimmest: #dfe1e2;
+  --color-outline-dimmer: #cfd1d3;
+  --color-outline-default: #bdc0c2;
+  --color-outline-stronger: #a2a6a9;
+  --color-outline-strongest: #808589;
+
+  --color-primary-dimmest: #b84000;
+  --color-primary-dimmer: #e04e00;
+  --color-primary-default: #ff5900;
+  --color-primary-stronger: #ff9c66;
+  --color-primary-strongest: #ff9c66;
+
+  --color-secondary-dimmest: #b84000;
+  --color-secondary-dimmer: #097bd3;
+  --color-secondary-default: #0b93f4;
+  --color-secondary-stronger: #6dbef8;
+  --color-secondary-strongest: #cee9fd;
+
+  --color-positive-dimmest: #107f5e;
+  --color-positive-dimmer: #14a378;
+  --color-positive-default: #19cc95;
+  --color-positive-stronger: #60ebc2;
+  --color-positive-strongest: #bbf7e5;
+
+  --color-negative-dimmest: #ae092d;
+  --color-negative-dimmer: #d40d37;
+  --color-negative-default: #f4154c;
+  --color-negative-stronger: #f98aa6;
+  --color-negative-strongest: #feecf0;
 }
 
 /* General */
 
 :root {
-  --border-radius: 4px;
+  --border-radius: 8px;
+  --shadow-panel: 0px 2px 8px 2px rgba(189, 192, 194, 0.8);
+  --shadow-subtle: 0px 2px 6px 1px rgba(189, 192, 194, 0.3);
 }
