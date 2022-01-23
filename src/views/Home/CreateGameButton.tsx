@@ -77,21 +77,6 @@ function CreateGameButton({
   };
 
   const handleClick = () => {
-    // We will be using bonfire in the future, but for debugging purposes we are currently using WS instead
-    //     fetch(`http://${process.env.REACT_APP_DOMAIN}/create_game`, {
-    //       method: "GET",
-    //       headers: {
-    //         "content-type": "application/json",
-    //         "Access-Control-Allow-Origin": "http://localhost:8045",
-    //       },
-    //       credentials: "include",
-    //     })
-    //       .then((data) => data.json())
-    //       .then((newGame: CreateGameResponse) => setGameId(newGame.game_id))
-    //
-    //
-    //       .catch((e) => console.log(e));
-
     setWS(
       new ImprovedWebSocket(
         "ws://localhost:5000",
@@ -128,4 +113,5 @@ function CreateGameButton({
     </Button>
   );
 }
+
 export default CreateGameButton;

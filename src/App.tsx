@@ -6,7 +6,7 @@ import Lobby from "./views/Lobby";
 import ImprovedWebSocket from "./utils/improvedWebSocket";
 import Game from "./views/Game";
 import JoinGame from "./views/JoinGame";
-import { Player } from "./interfaces/game";
+import { Player, User } from "./interfaces/game";
 
 function App() {
   let navigate = useNavigate();
@@ -35,7 +35,12 @@ function App() {
         <Route
           path="/joinGame"
           element={
-            <JoinGame player={player} setPlayer={setPlayer} ws={webSocket} />
+            <JoinGame
+              player={player}
+              setPlayer={setPlayer}
+              ws={webSocket}
+              setTaskCount={setTaskCount}
+            />
           }
         />
         <Route

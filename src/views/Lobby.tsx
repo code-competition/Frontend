@@ -1,8 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Panel from "../components/Panel";
+import PanelHeader from "../components/Panel/PanelHeader";
 import { Player } from "../interfaces/game";
-import ImprovedWebSocket from "../utils/improvedWebSocket";
-import HostLobby from "./Lobby/HostLobby";
-import UserLobby from "./Lobby/UserLobby";
+import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
+import PlayerList from "./Lobby/PlayerList";
+import StartGameButton from "./Lobby/StartGameButton";
 
 interface LobbyProps {
   ws: ImprovedWebSocket | null;
@@ -12,14 +15,43 @@ interface LobbyProps {
 }
 
 function Lobby({ player, ws, taskCount, setTaskCount }: LobbyProps) {
+  const gameId = useParams().id;
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (ws !== null && taskCount !== null) {
+      navigate(`/game/${gameId}`);
+      ws.removeEventListener(
+        WebSocketEvents.Message,
+        "userJoinDisconnectListener"
+      );
+    }
+  }, [taskCount, navigate, gameId]);
+
   return (
-    <section>
-      {(player as Player).isHost ? (
-        <HostLobby ws={ws} taskCount={taskCount} setTaskCount={setTaskCount} />
-      ) : (
-        <UserLobby ws={ws} taskCount={taskCount} setTaskCount={setTaskCount} />
-      )}
-    </section>
+    <div className={`ph-p-lobby ${!player?.isHost ? "ph-p-lobby--user" : ""}`}>
+      <Panel
+        className="ph-p-lobby__main"
+        headerContent={
+          <PanelHeader
+            header="Lobby"
+            subheader="Invite and prepare your friends for some coding fun!"
+          />
+        }
+      >
+        <div className="ph-p-lobby-content">
+          <div className="ph-p-game-id">
+            <p className="ph-p-game-id__text">{gameId}</p>
+          </div>
+
+          {player?.isHost ? (
+            <StartGameButton ws={ws} setTaskCount={setTaskCount} />
+          ) : null}
+        </div>
+      </Panel>
+
+      {player?.isHost ? <PlayerList ws={ws} /> : null}
+    </div>
   );
 }
 

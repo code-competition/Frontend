@@ -1,0 +1,32 @@
+.ph-p-game {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "question editor"
+    "testcases console";
+
+  height: 100%;
+  width: 100%;
+
+  grid-gap: 20px;
+  padding: 20px;
+
+  background: var(--color-background-root);
+
+  &__question {
+    grid-area: question;
+  }
+
+  &__editor {
+    grid-area: editor;
+  }
+
+  &__testcases {
+    grid-area: testcases;
+  }
+
+  &__console {
+    grid-area: console;
+  }
+}

@@ -13,8 +13,8 @@ interface HomeProps {
 
 function Home({ player, setPlayer, webSocket, setWebSocket }: HomeProps) {
   return (
-    <main className="ph-l-home">
-      <div className="ph-l-home__buttons">
+    <main className="ph-p-home">
+      <div className="ph-p-home__buttons">
         <CreateGameButton
           player={player}
           setPlayer={setPlayer}

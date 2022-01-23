@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { WebSocketEvents } from "../../utils/improvedWebSocket";
 import { EventListener } from "../../utils/improvedWebSocket";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
+import PlayerPlay from "../../assets/player-play.svg";
+import IconButton from "../../components/IconButton";
 
 interface TestCodeProps {
   ws: ImprovedWebSocket | null;
@@ -43,6 +45,10 @@ function TestCode({
       ws.addEventListener(WebSocketEvents.Message, listenerId, listener);
     }
   }, []);
-  return <button onClick={handleClick}>Test</button>;
+  return (
+    <IconButton icon={PlayerPlay} onClick={handleClick}>
+      Test
+    </IconButton>
+  );
 }
 export default TestCode;

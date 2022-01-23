@@ -4,8 +4,12 @@
 @import "base/typography";
 @import "base/resets";
 
-@import "layout/home";
-@import "layout/joinGame";
-
 @import "components/buttons";
 @import "components/forms";
+@import "components/dividers";
+@import "components/panels";
+
+@import "pages/home";
+@import "pages/joinGame";
+@import "pages/lobby";
+@import "pages/game";

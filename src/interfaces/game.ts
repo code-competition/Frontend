@@ -20,3 +20,8 @@ export interface PublicTestProgress {
 export interface Player {
   isHost: boolean;
 }
+
+export interface User {
+  id: string;
+  name: string;
+}

@@ -129,6 +129,8 @@
 
 .ph-c-icon-btn {
   @include flex-center;
+  border-radius: var(--border-radius);
+  border: none;
 
   &--primary {
     background: var(--color-primary-default);
@@ -160,5 +162,22 @@
   &--big {
     height: 60px;
     width: 60px;
+  }
+
+  &__image {
+    &--small {
+      height: 18px;
+      width: 18px;
+    }
+
+    &--default {
+      height: 24px;
+      width: 24px;
+    }
+
+    &--big {
+      height: 32px;
+      width: 32px;
+    }
   }
 }

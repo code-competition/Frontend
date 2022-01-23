@@ -1,0 +1,38 @@
+.ph-c-panel {
+  display: flex;
+  flex-direction: column;
+
+  background: var(--color-background-default);
+  border: 1px solid var(--color-outline-default);
+  border-radius: var(--border-radius);
+
+  width: 100%;
+  height: 100%;
+}
+
+.ph-c-panel__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+
+  &--header-content {
+    padding-left: 36px;
+  }
+
+  &--big {
+    min-height: 120px;
+    height: 120px;
+  }
+
+  &--small {
+    min-height: 60px;
+    height: 60px;
+  }
+}
+
+.ph-c-panel__content {
+  width: 100%;
+  height: 100%;
+}

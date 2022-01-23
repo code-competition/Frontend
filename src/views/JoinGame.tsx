@@ -1,7 +1,6 @@
 import {
   Dispatch,
   FormEvent,
-  FormEventHandler,
   SetStateAction,
   useEffect,
   useState,
@@ -9,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Button, { ButtonKind, ButtonSize } from "../components/Button";
 import Input from "../components/Input";
-import { Player } from "../interfaces/game";
+import { Player, User } from "../interfaces/game";
 import ImprovedWebSocket, {
   WebSocketEvents,
   EventListener,
@@ -19,9 +18,10 @@ interface JoinGameProps {
   ws: ImprovedWebSocket | null;
   player: Player | null;
   setPlayer: Dispatch<SetStateAction<Player | null>>;
+  setTaskCount: Dispatch<SetStateAction<number | null>>;
 }
 
-function JoinGame({ ws, player, setPlayer }: JoinGameProps) {
+function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
   let navigate = useNavigate();
 
   let [gameId, setGameId] = useState<string>("");
@@ -58,6 +58,21 @@ function JoinGame({ ws, player, setPlayer }: JoinGameProps) {
     }
   };
 
+  const startGameListener = (_: ImprovedWebSocket, ev: MessageEvent<any>) => {
+    let op = JSON.parse(ev.data).op;
+    let data = JSON.parse(ev.data).d;
+
+    if (op === "GameEvent" && data.op === "Start") {
+      setTaskCount(data.event.task_count);
+      if (ws !== null)
+        ws.removeEventListener(
+          WebSocketEvents.Message,
+          "userStartGame",
+          startGameListener
+        );
+    }
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -79,12 +94,19 @@ function JoinGame({ ws, player, setPlayer }: JoinGameProps) {
   useEffect(() => {
     if (gameId !== "" && player !== null && ws !== null) {
       ws.removeEventListener(WebSocketEvents.Message, "joinGame");
+
+      ws.addEventListener(
+        WebSocketEvents.Message,
+        "userStartGame",
+        startGameListener
+      );
+
       navigate(`/lobby/${gameId}`);
     }
   }, [gameId, player, ws, navigate]);
 
   return (
-    <div className="ph-l-join-game">
+    <div className="ph-p-join-game">
       <form onSubmit={handleSubmit} className="ph-c-form">
         <Input
           className="ph-c-form__item"

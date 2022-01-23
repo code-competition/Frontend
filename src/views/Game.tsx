@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CodeEditor from "../components/CodeEditor";
+import Panel, { PanelSize } from "../components/Panel";
 import { PublicTestProgress } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import TestCode from "./Game/TestCode";
@@ -79,44 +80,52 @@ function Game({ ws, taskCount }: GameProps) {
   }, [taskIndex, ws]);
 
   return (
-    <div>
-      <CodeEditor
-        onChange={(value, viewUpdate) => {
-          setCode(value);
-        }}
-      />
+    <div className="ph-p-game">
+      <Panel
+        className="ph-p-game__editor"
+        headerContent={
+          <TestCode
+            ws={ws}
+            listener={testResultListener}
+            listenerId={"testResult"}
+            code={code}
+            taskIndex={taskIndex}
+          />
+        }
+        panelSize={PanelSize.Small}
+      >
+        <CodeEditor
+          onChange={(value, viewUpdate) => {
+            setCode(value);
+          }}
+        />
+      </Panel>
 
-      <div>
-        <p>{error}</p>
+      <div className="ph-p-game__question">
+        <p>Question: {question}</p>
+        {testCases.map((testCase) => {
+          return (
+            <div key={testCase.id}>
+              <p>stdin: {testCase.stdin}</p>
+              <p>Expected: {testCase.expected}</p>
+              <p>
+                Got:
+                {
+                  testOutputs.filter(
+                    (output: TestOutput) => output.id === testCase.id
+                  )[0]?.got
+                }
+              </p>
+            </div>
+          );
+        })}
       </div>
 
-      <TestCode
-        ws={ws}
-        listener={testResultListener}
-        listenerId={"testResult"}
-        code={code}
-        taskIndex={taskIndex}
-      />
+      <div className="ph-p-game__testcases"></div>
 
-      <p>Question: {question}</p>
-      {testCases.map((testCase) => {
-        return (
-          <div key={testCase.id}>
-            <p>stdin: {testCase.stdin}</p>
-            <p>Expected: {testCase.expected}</p>
-            <p>
-              Got:
-              {
-                testOutputs.filter(
-                  (output: TestOutput) => output.id === testCase.id
-                )[0]?.got
-              }
-            </p>
-          </div>
-        );
-      })}
-
-      <div></div>
+      <div className="ph-p-game__console">
+        <p>{error}</p>
+      </div>
     </div>
   );
 }
