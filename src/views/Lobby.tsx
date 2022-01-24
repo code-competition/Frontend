@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Panel from "../components/Panel";
+import Panel, { PanelSize } from "../components/Panel";
 import PanelHeader from "../components/Panel/PanelHeader";
 import { Player } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
@@ -29,9 +29,10 @@ function Lobby({ player, ws, taskCount, setTaskCount }: LobbyProps) {
   }, [taskCount, navigate, gameId]);
 
   return (
-    <div className={`ph-p-lobby ${!player?.isHost ? "ph-p-lobby--user" : ""}`}>
+    <div className={`ph-l-lobby ${!player?.isHost ? "ph-l-lobby--user" : ""}`}>
       <Panel
-        className="ph-p-lobby__main"
+        className="ph-l-lobby__main"
+        panelSize={PanelSize.Big}
         headerContent={
           <PanelHeader
             header="Lobby"

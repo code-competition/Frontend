@@ -4,19 +4,26 @@ interface PanelProps {
   children: ReactNode;
   headerContent: ReactNode;
   panelSize?: PanelSize;
+  kind?: PanelKind;
   className?: string;
 }
 
 export enum PanelSize {
   Big = "big",
-  Small = "small",
+  Default = "default",
+}
+
+export enum PanelKind {
+  Default = "default",
+  Basic = "basic",
 }
 
 function Panel({
   children,
   headerContent,
   className = "",
-  panelSize = PanelSize.Big,
+  panelSize = PanelSize.Default,
+  kind = PanelKind.Default,
 }: PanelProps) {
   return (
     <section className={`${className} ph-c-panel`}>
@@ -28,7 +35,9 @@ function Panel({
 
       <div className="ph-c-divider ph-c-divider--horizontal ph-c-divider--default"></div>
 
-      <div className="ph-c-panel__content">{children}</div>
+      <div className={`ph-c-panel__content ph-c-panel__content--${kind}`}>
+        {children}
+      </div>
     </section>
   );
 }

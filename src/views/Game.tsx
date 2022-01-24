@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import CodeEditor from "../components/CodeEditor";
-import Panel, { PanelSize } from "../components/Panel";
+import Panel, { PanelKind, PanelSize } from "../components/Panel";
+import PanelHeader from "../components/Panel/PanelHeader";
 import { PublicTestProgress } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import TestCode from "./Game/TestCode";
@@ -80,9 +81,20 @@ function Game({ ws, taskCount }: GameProps) {
   }, [taskIndex, ws]);
 
   return (
-    <div className="ph-p-game">
+    <div className="ph-l-game">
       <Panel
-        className="ph-p-game__editor"
+        className="ph-l-game__question"
+        kind={PanelKind.Basic}
+        panelSize={PanelSize.Default}
+        headerContent={
+          <PanelHeader header="Questions" panelSize={PanelSize.Default} />
+        }
+      >
+        <p>{question}</p>
+      </Panel>
+      <Panel
+        className="ph-l-game__editor"
+        panelSize={PanelSize.Default}
         headerContent={
           <TestCode
             ws={ws}
@@ -92,7 +104,6 @@ function Game({ ws, taskCount }: GameProps) {
             taskIndex={taskIndex}
           />
         }
-        panelSize={PanelSize.Small}
       >
         <CodeEditor
           onChange={(value, viewUpdate) => {
@@ -101,8 +112,14 @@ function Game({ ws, taskCount }: GameProps) {
         />
       </Panel>
 
-      <div className="ph-p-game__question">
-        <p>Question: {question}</p>
+      <Panel
+        className="ph-l-game__testcases"
+        kind={PanelKind.Basic}
+        panelSize={PanelSize.Default}
+        headerContent={
+          <PanelHeader header="Test cases" panelSize={PanelSize.Default} />
+        }
+      >
         {testCases.map((testCase) => {
           return (
             <div key={testCase.id}>
@@ -119,13 +136,18 @@ function Game({ ws, taskCount }: GameProps) {
             </div>
           );
         })}
-      </div>
+      </Panel>
 
-      <div className="ph-p-game__testcases"></div>
-
-      <div className="ph-p-game__console">
+      <Panel
+        className="ph-l-game__console"
+        kind={PanelKind.Basic}
+        panelSize={PanelSize.Default}
+        headerContent={
+          <PanelHeader header="Console" panelSize={PanelSize.Default} />
+        }
+      >
         <p>{error}</p>
-      </div>
+      </Panel>
     </div>
   );
 }

@@ -16,10 +16,7 @@ function Input(props: InputProps & HTMLProps<HTMLInputElement>) {
     <div className={`ph-c-input ${props.className}`}>
       {props.hasLabel === undefined || props.hasLabel ? (
         <>
-          <label
-            className="ph-c-input__label ph-b-body ph-b-body--small"
-            htmlFor={props.name}
-          >
+          <label className="ph-c-input__label" htmlFor={props.name}>
             {props.name}
           </label>
           <input {...props} className={`ph-c-input__textbox`} id={props.name} />

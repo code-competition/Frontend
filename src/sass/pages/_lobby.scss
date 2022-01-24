@@ -1,33 +1,3 @@
-.ph-p-lobby {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  grid-template-rows: 100%;
-  grid-template-areas: "main players";
-
-  height: 100%;
-  width: 100%;
-
-  grid-gap: 20px;
-  padding: 20px;
-
-  background: var(--color-background-root);
-
-  &--user {
-    display: flex;
-  }
-
-  &__players {
-    grid-area: players;
-  }
-
-  &__main {
-    display: flex;
-    flex-direction: column;
-
-    grid-area: main;
-  }
-}
-
 .ph-p-lobby-content {
   @include flex-center(column);
   width: 100%;

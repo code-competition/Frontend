@@ -4,6 +4,7 @@ import { EventListener } from "../../utils/improvedWebSocket";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
 import PlayerPlay from "../../assets/player-play.svg";
 import IconButton from "../../components/IconButton";
+import { ButtonSize } from "../../components/Button";
 
 interface TestCodeProps {
   ws: ImprovedWebSocket | null;
@@ -46,9 +47,11 @@ function TestCode({
     }
   }, []);
   return (
-    <IconButton icon={PlayerPlay} onClick={handleClick}>
-      Test
-    </IconButton>
+    <IconButton
+      icon={PlayerPlay}
+      onClick={handleClick}
+      btnsize={ButtonSize.Small}
+    />
   );
 }
 export default TestCode;

@@ -1,13 +1,3 @@
-.ph-c-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  &__item {
-    margin: 10px 0;
-  }
-}
-
 .ph-c-input {
   display: flex;
   flex-direction: column;
@@ -16,6 +6,8 @@
   width: 320px;
 
   &__label {
+    @extend .ph-b-body;
+    @extend .ph-b-body--small;
   }
 
   &__textbox {

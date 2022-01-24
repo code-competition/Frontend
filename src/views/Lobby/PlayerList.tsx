@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
-import Panel from "../../components/Panel";
+import Panel, { PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
 import { User } from "../../interfaces/game";
 import ImprovedWebSocket, {
@@ -60,7 +60,8 @@ function PlayerList({ ws }: PlayerListProps) {
 
   return (
     <Panel
-      className="ph-p-lobby__players"
+      className="ph-l-lobby__players"
+      panelSize={PanelSize.Big}
       headerContent={
         <PanelHeader
           header="Players"

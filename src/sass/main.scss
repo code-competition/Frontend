@@ -5,11 +5,14 @@
 @import "base/resets";
 
 @import "components/buttons";
-@import "components/forms";
+@import "components/inputs";
 @import "components/dividers";
-@import "components/panels";
+@import "components/editor";
+
+@import "layout/panels";
+@import "layout/forms";
+@import "layout/grids";
 
 @import "pages/home";
 @import "pages/joinGame";
 @import "pages/lobby";
-@import "pages/game";
