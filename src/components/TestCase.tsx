@@ -1,21 +1,21 @@
-import { ReactNode } from "react";
-import ChevronDown from "../assets/icons/chevron-down.svg";
+import { Dispatch, SetStateAction } from "react";
+import { LogData, LogType } from "../views/Game/GameConsole";
 
-interface TestcaseProps {
+interface TestCaseProps {
   name: string;
   stdin: string;
   expected: string;
   got: string;
-  sendToConsole(item: ReactNode): void;
+  setLogHistory: Dispatch<SetStateAction<LogData[]>>;
 }
 
-function Testcase({
+function TestCase({
   name,
   stdin,
   expected,
   got,
-  sendToConsole,
-}: TestcaseProps) {
+  setLogHistory,
+}: TestCaseProps) {
   const handleClick = () => {
     let d = (
       <div>
@@ -23,7 +23,13 @@ function Testcase({
       </div>
     );
 
-    sendToConsole(d);
+    setLogHistory((prev) => [
+      ...prev,
+      {
+        type: LogType.Result,
+        data: d,
+      },
+    ]);
   };
 
   return (
@@ -39,4 +45,4 @@ function Testcase({
   );
 }
 
-export default Testcase;
+export default TestCase;

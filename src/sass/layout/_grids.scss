@@ -28,6 +28,7 @@
 
   &__console {
     grid-area: console;
+    overflow-y: auto;
   }
 }
 

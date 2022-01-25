@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { WebSocketEvents } from "../../utils/improvedWebSocket";
-import { EventListener } from "../../utils/improvedWebSocket";
-import ImprovedWebSocket from "../../utils/improvedWebSocket";
-import PlayerPlay from "../../assets/icons/player-play.svg";
-import IconButton from "../../components/IconButton";
-import { ButtonSize } from "../../components/Button";
+import { WebSocketEvents } from "../../../utils/improvedWebSocket";
+import { EventListener } from "../../../utils/improvedWebSocket";
+import ImprovedWebSocket from "../../../utils/improvedWebSocket";
+import PlayerPlay from "../../../assets/icons/player-play.svg";
+import IconButton from "../../../components/IconButton";
+import { ButtonSize } from "../../../components/Button";
 
 interface TestCodeProps {
   ws: ImprovedWebSocket | null;

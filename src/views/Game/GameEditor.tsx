@@ -4,21 +4,22 @@ import Panel, { PanelSize } from "../../components/Panel";
 import { PublicTestProgress } from "../../interfaces/game";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
 import { TestOutput } from "../Game";
-import TestCode from "./TestCode";
+import { LogData, LogType } from "./GameConsole";
+import TestCode from "./GameEditor/TestCode";
 
-interface EditorPanelProps {
+interface GameEditorProps {
   ws: ImprovedWebSocket | null;
   taskIndex: number;
   setTestOutputs: Dispatch<SetStateAction<TestOutput[]>>;
-  setError: Dispatch<SetStateAction<string>>;
+  setLogHistory: Dispatch<SetStateAction<LogData[]>>;
 }
 
-function EditorPanel({
+function GameEditor({
   ws,
   taskIndex,
   setTestOutputs,
-  setError,
-}: EditorPanelProps) {
+  setLogHistory,
+}: GameEditorProps) {
   let [code, setCode] = useState<string>("");
 
   const testResultListener = (_: ImprovedWebSocket, ev: MessageEvent) => {
@@ -33,7 +34,13 @@ function EditorPanel({
         }))
       );
 
-      setError(data.d.stderr);
+      setLogHistory((prev) => [
+        ...prev,
+        {
+          type: LogType.Error,
+          data: <p className="ph-b-code ph-b-code--default">{data.d.stderr}</p>,
+        },
+      ]);
     }
   };
   return (
@@ -59,4 +66,4 @@ function EditorPanel({
   );
 }
 
-export default EditorPanel;
+export default GameEditor;

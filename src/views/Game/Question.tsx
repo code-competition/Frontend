@@ -1,11 +1,11 @@
 import Panel, { PanelKind, PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
 
-interface QuestionPanelProps {
+interface QuestionProps {
   question: string;
 }
 
-function QuestionPanel({ question }: QuestionPanelProps) {
+function Question({ question }: QuestionProps) {
   return (
     <Panel
       className="ph-l-game__question"
@@ -20,4 +20,4 @@ function QuestionPanel({ question }: QuestionPanelProps) {
   );
 }
 
-export default QuestionPanel;
+export default Question;

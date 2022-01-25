@@ -15,3 +15,6 @@ The frontend webpage for project Capybara.
     - Basically any raw typescript code that's not a component
 - Views
     - The main page with all of the components for the different pages
+
+# TODO
+Fix console - make sure that things stay at the top and scroll into view as they come in

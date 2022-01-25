@@ -1,0 +1,19 @@
+.ph-c-log-message {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  border-radius: var(--border-radius);
+
+  &--result {
+    background: var(--color-background-higher);
+  }
+
+  &--message {
+    background: var(--color-background-higher);
+  }
+
+  &--error {
+    background: var(--color-negative-strongest);
+  }
+}

@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
-import QuestionPanel from "./Game/QuestionPanel";
-import EditorPanel from "./Game/EditorPanel";
-import TestcasePanel from "./Game/TestcasePanel";
-import ConsolePanel, { ConsoleLog } from "./Game/ConsolePanel";
+import Question from "./Game/Question";
+import GameEditor from "./Game/GameEditor";
+import TestCases from "./Game/TestCases";
+import GameConsole, { LogData } from "./Game/GameConsole";
 
 interface GameProps {
   ws: ImprovedWebSocket | null;
   taskCount: number;
 }
 
-export interface TestCase {
+export interface TestCaseData {
   id: number;
   stdin: string;
   expected: string;
@@ -22,12 +22,11 @@ export interface TestOutput {
 }
 
 function Game({ ws, taskCount }: GameProps) {
-  let [consoleLog, setConsoleLog] = useState<ConsoleLog[]>([]);
-  let [error, setError] = useState<string>("");
+  let [logHistory, setLogHistory] = useState<LogData[]>([]);
 
   let [taskIndex /*, setTaskIndex */] = useState<number>(0);
 
-  let [testCases, setTestCases] = useState<TestCase[]>([]);
+  let [testCases, setTestCases] = useState<TestCaseData[]>([]);
   let [testOutputs, setTestOutputs] = useState<TestOutput[]>([]);
   let [question, setQuestion] = useState<string>("");
 
@@ -39,7 +38,7 @@ function Game({ ws, taskCount }: GameProps) {
       let task = data.d.task;
       setQuestion(task.question);
       setTestCases(
-        task.public_test_cases.sort((testCase: TestCase) => testCase.id)
+        task.public_test_cases.sort((testCase: TestCaseData) => testCase.id)
       );
     }
   };
@@ -65,15 +64,20 @@ function Game({ ws, taskCount }: GameProps) {
 
   return (
     <div className="ph-l-game">
-      <QuestionPanel question={question} />
-      <EditorPanel
+      <Question question={question} />
+
+      <GameEditor
         ws={ws}
         taskIndex={taskIndex}
         setTestOutputs={setTestOutputs}
-        setError={setError}
+        setLogHistory={setLogHistory}
       />
-      <TestcasePanel testCases={testCases} testOutputs={testOutputs} />
-      <ConsolePanel error={error} />
+      <TestCases
+        testCases={testCases}
+        testOutputs={testOutputs}
+        setLogHistory={setLogHistory}
+      />
+      <GameConsole logHistory={logHistory} />
     </div>
   );
 }
