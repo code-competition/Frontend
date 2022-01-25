@@ -26,7 +26,7 @@ function Lobby({ player, ws, taskCount, setTaskCount }: LobbyProps) {
         "userJoinDisconnectListener"
       );
     }
-  }, [taskCount, navigate, gameId]);
+  }, [ws, taskCount, navigate, gameId]);
 
   return (
     <div className={`ph-l-lobby ${!player?.isHost ? "ph-l-lobby--user" : ""}`}>

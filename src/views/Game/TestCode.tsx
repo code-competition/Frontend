@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { WebSocketEvents } from "../../utils/improvedWebSocket";
 import { EventListener } from "../../utils/improvedWebSocket";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
-import PlayerPlay from "../../assets/player-play.svg";
+import PlayerPlay from "../../assets/icons/player-play.svg";
 import IconButton from "../../components/IconButton";
 import { ButtonSize } from "../../components/Button";
 
