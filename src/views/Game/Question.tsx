@@ -15,7 +15,7 @@ function Question({ question }: QuestionProps) {
         <PanelHeader header="Questions" panelSize={PanelSize.Default} />
       }
     >
-      <p>{question}</p>
+      <p className="ph-b-body">{question}</p>
     </Panel>
   );
 }

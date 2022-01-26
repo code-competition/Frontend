@@ -27,10 +27,13 @@ function GameEditor({
     let data = JSON.parse(ev.data).d;
 
     if (op === "Response" && data.op === "Compile") {
+      console.log(data.d);
       setTestOutputs(
         data.d.public_test_progress.map((test: PublicTestProgress) => ({
           id: test.test_index,
           got: test.stdout,
+          isDone: true,
+          hasFailed: !test.succeeded,
         }))
       );
 

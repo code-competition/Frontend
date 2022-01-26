@@ -1,16 +1,17 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import Question from "./Game/Question";
 import GameEditor from "./Game/GameEditor";
 import TestCases from "./Game/TestCases";
 import Output, { LogData } from "./Game/Output";
+import GameHeader from "./Game/GameHeader";
 
 interface GameProps {
   ws: ImprovedWebSocket | null;
   taskCount: number;
 }
 
-export interface TestCaseData {
+export interface PublicTestCase {
   id: number;
   stdin: string;
   expected: string;
@@ -19,6 +20,8 @@ export interface TestCaseData {
 export interface TestOutput {
   id: number;
   got: string;
+  isDone: boolean;
+  hasFailed: boolean;
 }
 
 function Game({ ws, taskCount }: GameProps) {
@@ -26,7 +29,7 @@ function Game({ ws, taskCount }: GameProps) {
 
   let [taskIndex /*, setTaskIndex */] = useState<number>(0);
 
-  let [testCases, setTestCases] = useState<TestCaseData[]>([]);
+  let [testCases, setTestCases] = useState<PublicTestCase[]>([]);
   let [testOutputs, setTestOutputs] = useState<TestOutput[]>([]);
   let [question, setQuestion] = useState<string>("");
 
@@ -38,7 +41,7 @@ function Game({ ws, taskCount }: GameProps) {
       let task = data.d.task;
       setQuestion(task.question);
       setTestCases(
-        task.public_test_cases.sort((testCase: TestCaseData) => testCase.id)
+        task.public_test_cases.sort((testCase: PublicTestCase) => testCase.id)
       );
     }
   };
@@ -64,20 +67,24 @@ function Game({ ws, taskCount }: GameProps) {
 
   return (
     <div className="ph-l-game">
-      <Question question={question} />
+      <GameHeader />
 
-      <GameEditor
-        ws={ws}
-        taskIndex={taskIndex}
-        setTestOutputs={setTestOutputs}
-        setLogHistory={setLogHistory}
-      />
-      <TestCases
-        testCases={testCases}
-        testOutputs={testOutputs}
-        setLogHistory={setLogHistory}
-      />
-      <Output logHistory={logHistory} />
+      <div className="ph-l-game__content">
+        <Question question={question} />
+
+        <GameEditor
+          ws={ws}
+          taskIndex={taskIndex}
+          setTestOutputs={setTestOutputs}
+          setLogHistory={setLogHistory}
+        />
+        <TestCases
+          publicTestCases={testCases}
+          testOutputs={testOutputs}
+          setLogHistory={setLogHistory}
+        />
+        <Output logHistory={logHistory} />
+      </div>
     </div>
   );
 }

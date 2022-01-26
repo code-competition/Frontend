@@ -11,7 +11,6 @@ function CodeEditor({ onChange }: CodeEditorProps) {
     <div className="ph-c-editor">
       <CodeMirror
         value='fn main() { println!("true"); }'
-        height="500px"
         extensions={[javascript({ jsx: true }), rust()]}
         onChange={onChange}
       />
