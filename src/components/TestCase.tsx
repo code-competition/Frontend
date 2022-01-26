@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { LogData, LogType } from "../views/Game/GameConsole";
+import { LogData, LogType } from "../views/Game/Output";
 
 interface TestCaseProps {
   name: string;
@@ -17,17 +17,26 @@ function TestCase({
   setLogHistory,
 }: TestCaseProps) {
   const handleClick = () => {
-    let d = (
-      <div>
-        {stdin} {expected} {got}
-      </div>
+    let logOutput = (
+      <ul className="ph-c-log-message__list">
+        <li className="ph-b-code">
+          <span className="ph-b-code ph-b-code--bold">Tested Input</span>{" "}
+          {stdin}
+        </li>
+        <li className="ph-b-code">
+          <span className="ph-b-code ph-b-code--bold">Expected</span> {expected}
+        </li>
+        <li className="ph-b-code">
+          <span className="ph-b-code ph-b-code--bold">Got</span> {got}
+        </li>
+      </ul>
     );
 
     setLogHistory((prev) => [
       ...prev,
       {
         type: LogType.Result,
-        data: d,
+        data: logOutput,
       },
     ]);
   };

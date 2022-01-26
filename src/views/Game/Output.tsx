@@ -14,15 +14,15 @@ export interface LogData {
   data: ReactNode;
 }
 
-interface GameConsoleProps {
+interface OutputProps {
   logHistory: LogData[];
 }
 
-function GameConsole({ logHistory }: GameConsoleProps) {
-  let [consoleHistory, setConsoleHistory] = useState<ReactNode[]>([]);
+function Output({ logHistory }: OutputProps) {
+  let [outputHistory, setOutputHistory] = useState<ReactNode[]>([]);
 
   useEffect(() => {
-    setConsoleHistory(
+    setOutputHistory(
       logHistory.map((log: LogData) => (
         <LogMessage type={log.type} data={log.data} />
       ))
@@ -31,16 +31,16 @@ function GameConsole({ logHistory }: GameConsoleProps) {
 
   return (
     <Panel
-      className="ph-l-game__console"
-      kind={PanelKind.BasicReverse}
+      className="ph-l-game__output"
+      kind={PanelKind.Basic}
       panelSize={PanelSize.Default}
       headerContent={
-        <PanelHeader header="Console" panelSize={PanelSize.Default} />
+        <PanelHeader header="Output" panelSize={PanelSize.Default} />
       }
     >
-      {consoleHistory}
+      <div className="ph-p-game__output-history">{outputHistory}</div>
     </Panel>
   );
 }
 
-export default GameConsole;
+export default Output;

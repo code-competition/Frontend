@@ -3,7 +3,7 @@ import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import Question from "./Game/Question";
 import GameEditor from "./Game/GameEditor";
 import TestCases from "./Game/TestCases";
-import GameConsole, { LogData } from "./Game/GameConsole";
+import Output, { LogData } from "./Game/Output";
 
 interface GameProps {
   ws: ImprovedWebSocket | null;
@@ -77,7 +77,7 @@ function Game({ ws, taskCount }: GameProps) {
         testOutputs={testOutputs}
         setLogHistory={setLogHistory}
       />
-      <GameConsole logHistory={logHistory} />
+      <Output logHistory={logHistory} />
     </div>
   );
 }

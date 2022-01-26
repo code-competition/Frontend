@@ -46,6 +46,7 @@ function TestCode({
       ws.addEventListener(WebSocketEvents.Message, listenerId, listener);
     }
   }, []);
+
   return (
     <IconButton
       icon={PlayerPlay}

@@ -1,4 +1,4 @@
-import { LogData } from "../views/Game/GameConsole";
+import { LogData } from "../views/Game/Output";
 
 function LogMessage({ type, data }: LogData) {
   return (

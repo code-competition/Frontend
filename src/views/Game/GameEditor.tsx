@@ -4,7 +4,7 @@ import Panel, { PanelSize } from "../../components/Panel";
 import { PublicTestProgress } from "../../interfaces/game";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
 import { TestOutput } from "../Game";
-import { LogData, LogType } from "./GameConsole";
+import { LogData, LogType } from "./Output";
 import TestCode from "./GameEditor/TestCode";
 
 interface GameEditorProps {
@@ -34,15 +34,20 @@ function GameEditor({
         }))
       );
 
-      setLogHistory((prev) => [
-        ...prev,
-        {
-          type: LogType.Error,
-          data: <p className="ph-b-code ph-b-code--default">{data.d.stderr}</p>,
-        },
-      ]);
+      if (data.d.stderr !== "") {
+        setLogHistory((prev) => [
+          ...prev,
+          {
+            type: LogType.Error,
+            data: (
+              <p className="ph-b-code ph-b-code--default">{data.d.stderr}</p>
+            ),
+          },
+        ]);
+      }
     }
   };
+
   return (
     <Panel
       className="ph-l-game__editor"

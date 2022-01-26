@@ -4,7 +4,7 @@
   grid-template-rows: 1fr 1fr;
   grid-template-areas:
     "question editor"
-    "testcases console";
+    "test-cases output";
 
   height: 100%;
   width: 100%;
@@ -22,12 +22,12 @@
     grid-area: editor;
   }
 
-  &__testcases {
-    grid-area: testcases;
+  &__testCases {
+    grid-area: test-cases;
   }
 
-  &__console {
-    grid-area: console;
+  &__output {
+    grid-area: output;
     overflow-y: auto;
   }
 }

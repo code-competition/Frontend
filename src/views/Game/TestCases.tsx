@@ -1,9 +1,9 @@
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Panel, { PanelKind, PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
 import TestCase from "../../components/TestCase";
 import { TestCaseData, TestOutput } from "../Game";
-import { LogData } from "./GameConsole";
+import { LogData } from "./Output";
 
 interface TestCasesProps {
   testCases: TestCaseData[];
@@ -14,7 +14,7 @@ interface TestCasesProps {
 function TestCases({ testCases, testOutputs, setLogHistory }: TestCasesProps) {
   return (
     <Panel
-      className="ph-l-game__testcases"
+      className="ph-l-game__test-cases"
       kind={PanelKind.Basic}
       panelSize={PanelSize.Default}
       headerContent={

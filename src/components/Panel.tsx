@@ -16,7 +16,6 @@ export enum PanelSize {
 export enum PanelKind {
   Default = "default",
   Basic = "basic",
-  BasicReverse = "basic-reverse",
 }
 
 function Panel({
