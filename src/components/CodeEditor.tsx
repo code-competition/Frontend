@@ -1,6 +1,7 @@
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { rust } from "@codemirror/lang-rust";
+import { proghourLight } from "../utils/editorThemes/proghourLight";
 
 interface CodeEditorProps {
   onChange(value: string, viewUpdate: ViewUpdate): void;
@@ -9,11 +10,14 @@ interface CodeEditorProps {
 function CodeEditor({ onChange }: CodeEditorProps) {
   return (
     <div className="ph-c-editor">
-      <CodeMirror
-        value='fn main() { println!("true"); }'
-        extensions={[javascript({ jsx: true }), rust()]}
-        onChange={onChange}
-      />
+      <div className="ph-c-editor__editing-area">
+        <CodeMirror
+          value='fn main() { println!("true"); }'
+          extensions={[javascript({ jsx: true }), rust()]}
+          theme={proghourLight}
+          onChange={onChange}
+        />
+      </div>
 
       <div className="ph-c-divider ph-c-divider--horizontal ph-c-divider--default"></div>
 
