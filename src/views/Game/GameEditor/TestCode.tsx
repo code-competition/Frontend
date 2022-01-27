@@ -3,8 +3,12 @@ import { WebSocketEvents } from "../../../utils/improvedWebSocket";
 import { EventListener } from "../../../utils/improvedWebSocket";
 import ImprovedWebSocket from "../../../utils/improvedWebSocket";
 import PlayerPlay from "../../../assets/icons/player-play.svg";
-import IconButton from "../../../components/IconButton";
+import IconButton, { IconKind } from "../../../components/IconButton";
 import { ButtonSize } from "../../../components/Button";
+import AnimatedIcon, {
+  AnimatedIconKind,
+  AnimatedIconSize,
+} from "../../../components/AnimatedIcons";
 
 interface TestCodeProps {
   ws: ImprovedWebSocket | null;
@@ -49,7 +53,13 @@ function TestCode({
 
   return (
     <IconButton
-      icon={PlayerPlay}
+      icon={
+        <AnimatedIcon
+          kind={AnimatedIconKind.Spinner}
+          size={AnimatedIconSize.Small}
+        />
+      }
+      kind={IconKind.ReactNode}
       onClick={handleClick}
       btnsize={ButtonSize.Small}
     />

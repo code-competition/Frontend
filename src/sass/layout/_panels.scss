@@ -9,6 +9,8 @@
   width: 100%;
   height: 100%;
 
+  overflow: auto;
+
   &__header {
     display: flex;
     flex-direction: column;
@@ -17,7 +19,7 @@
     width: 100%;
 
     &--header-content {
-      padding-left: 36px;
+      padding-left: 20px;
     }
 
     &--default {

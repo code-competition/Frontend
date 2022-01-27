@@ -7,19 +7,19 @@
   &__header {
     background: var(--color-background-default);
     border-bottom: 0.5px solid var(--color-outline-default);
-    height: 80px;
+    height: 60px;
     width: 100%;
   }
 
   &__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: auto 30%;
     grid-template-areas:
       "question editor"
       "test-cases output";
 
-    height: 100%;
+    height: calc(100vh - 60px);
     max-height: 100%;
     width: 100%;
 
@@ -30,6 +30,7 @@
   }
 
   &__question {
+    resize: both;
     grid-area: question;
   }
 

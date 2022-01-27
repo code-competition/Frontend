@@ -1,7 +1,7 @@
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { rust } from "@codemirror/lang-rust";
-import { proghourLight } from "../utils/editorThemes/proghourLight";
+import { editorLight } from "../utils/editorThemes/editorLight";
 
 interface CodeEditorProps {
   onChange(value: string, viewUpdate: ViewUpdate): void;
@@ -14,7 +14,7 @@ function CodeEditor({ onChange }: CodeEditorProps) {
         <CodeMirror
           value='fn main() { println!("true"); }'
           extensions={[javascript({ jsx: true }), rust()]}
-          theme={proghourLight}
+          theme={editorLight}
           onChange={onChange}
         />
       </div>

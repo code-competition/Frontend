@@ -1,11 +1,12 @@
-import { HTMLProps } from "react";
+import { HTMLProps, ReactNode } from "react";
 import { ButtonSize } from "./Button";
 
 interface IconButtonProps {
-  icon: string;
+  icon: ReactNode | string;
   alt?: string;
   btnsize?: ButtonSize;
   type?: "button" | "submit" | "reset";
+  kind?: IconKind;
 }
 
 export enum IconSize {
@@ -15,7 +16,15 @@ export enum IconSize {
   ExtraLarge = "extraLarge",
 }
 
-function IconButton(props: IconButtonProps & HTMLProps<HTMLButtonElement>) {
+export enum IconKind {
+  ReactNode = "reactNode",
+  Image = "image",
+}
+
+function IconButton({
+  kind = IconKind.Image,
+  ...props
+}: IconButtonProps & HTMLProps<HTMLButtonElement>) {
   return (
     <button
       {...props}
@@ -23,15 +32,19 @@ function IconButton(props: IconButtonProps & HTMLProps<HTMLButtonElement>) {
         props.btnsize === undefined ? ButtonSize.Default : props.btnsize
       } ph-c-btn--primary`}
     >
-      <img
-        className={`${
-          props.className
-        } ph-c-icon-btn__image ph-c-icon-btn__image--${
-          props.btnsize === undefined ? ButtonSize.Default : props.btnsize
-        }`}
-        src={props.icon}
-        alt={props.btnsize === undefined ? "" : props.alt}
-      />
+      {kind === IconKind.Image ? (
+        <img
+          className={`${
+            props.className
+          } ph-c-icon-btn__image ph-c-icon-btn__image--${
+            props.btnsize === undefined ? ButtonSize.Default : props.btnsize
+          }`}
+          src={props.icon as string}
+          alt={props.btnsize === undefined ? "" : props.alt}
+        />
+      ) : (
+        props.icon
+      )}
     </button>
   );
 }

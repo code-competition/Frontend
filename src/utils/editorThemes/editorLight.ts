@@ -8,44 +8,45 @@ const cssVar = (cssVariable: string): string => {
   );
 };
 
-const chalky = "#e5c07b",
-  coral = "#e06c75",
-  cyan = "#56b6c2",
-  invalid = "#ffffff",
-  ivory = "#abb2bf",
-  stone = "#7d8799", // Brightened compared to original to increase contrast
-  malibu = "#61afef",
-  sage = "#98c379",
-  whiskey = "#d19a66",
+// Basic colors
+const yellow = "#ff9c66",
+  red = "#f4154c",
+  cyan = "#097bd3",
+  blue = cssVar("--color-secondary-default"),
+  green = "#14a378",
+  orange = cssVar("--color-primary-default"),
   violet = "#c678dd",
+  gray = cssVar("--color-foreground-dimmer"),
+  grayStronger = cssVar("--color-foreground-dimmest");
+
+// Specialized colors
+const invalid = "#ffffff",
   darkBackground = cssVar("--color-background-higher"),
   highlightBackground = cssVar("--color-background-highest"),
   background = cssVar("--color-background-default"),
   tooltipBackground = "#353a42",
   selection = cssVar("--color-background-highest"),
-  cursor = "#528bff";
+  cursor = cssVar("--color-secondary-default");
 
-/// The editor theme styles for One Dark.
-export const oneDarkTheme = EditorView.theme(
+export const editorLightTheme = EditorView.theme(
   {
     "&": {
-      color: ivory,
+      color: gray,
       backgroundColor: background,
+      height: "auto",
     },
 
     ".cm-content": {
       caretColor: cursor,
     },
 
-    ".cm-editor.cm-focused": {
-      outline: "none",
-    },
+    ".cm-scroller": { overflow: "auto" },
 
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
       { backgroundColor: selection },
 
-    ".cm-panels": { backgroundColor: darkBackground, color: ivory },
+    ".cm-panels": { backgroundColor: darkBackground, color: gray },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
 
@@ -67,7 +68,7 @@ export const oneDarkTheme = EditorView.theme(
 
     ".cm-gutters": {
       backgroundColor: background,
-      color: stone,
+      color: grayStronger,
       border: "none",
     },
 
@@ -96,23 +97,27 @@ export const oneDarkTheme = EditorView.theme(
     ".cm-tooltip-autocomplete": {
       "& > ul > li[aria-selected]": {
         backgroundColor: highlightBackground,
-        color: ivory,
+        color: gray,
       },
+    },
+
+    "&.cm-focused": {
+      outline: "none !important",
     },
   },
   { dark: false }
 );
 
 /// The highlighting style for code in the One Dark theme.
-export const oneDarkHighlightStyle = HighlightStyle.define([
+export const editorLightHighlightStyle = HighlightStyle.define([
   { tag: t.keyword, color: violet },
   {
     tag: [t.name, t.deleted, t.character, t.propertyName, t.macroName],
-    color: coral,
+    color: red,
   },
-  { tag: [t.function(t.variableName), t.labelName], color: malibu },
-  { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: whiskey },
-  { tag: [t.definition(t.name), t.separator], color: ivory },
+  { tag: [t.function(t.variableName), t.labelName], color: blue },
+  { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: orange },
+  { tag: [t.definition(t.name), t.separator], color: gray },
   {
     tag: [
       t.typeName,
@@ -124,7 +129,7 @@ export const oneDarkHighlightStyle = HighlightStyle.define([
       t.self,
       t.namespace,
     ],
-    color: chalky,
+    color: yellow,
   },
   {
     tag: [
@@ -138,17 +143,18 @@ export const oneDarkHighlightStyle = HighlightStyle.define([
     ],
     color: cyan,
   },
-  { tag: [t.meta, t.comment], color: stone },
+  { tag: [t.meta, t.comment], color: grayStronger },
   { tag: t.strong, fontWeight: "bold" },
   { tag: t.emphasis, fontStyle: "italic" },
   { tag: t.strikethrough, textDecoration: "line-through" },
-  { tag: t.link, color: stone, textDecoration: "underline" },
-  { tag: t.heading, fontWeight: "bold", color: coral },
-  { tag: [t.atom, t.bool, t.special(t.variableName)], color: whiskey },
-  { tag: [t.processingInstruction, t.string, t.inserted], color: sage },
+  { tag: t.link, color: grayStronger, textDecoration: "underline" },
+  { tag: t.heading, fontWeight: "bold", color: red },
+  { tag: [t.atom, t.bool, t.special(t.variableName)], color: orange },
+  { tag: [t.processingInstruction, t.string, t.inserted], color: green },
   { tag: t.invalid, color: invalid },
 ]);
 
-/// Extension to enable the One Dark theme (both the editor theme and
-/// the highlight style).
-export const proghourLight: Extension = [oneDarkTheme, oneDarkHighlightStyle];
+export const editorLight: Extension = [
+  editorLightTheme,
+  editorLightHighlightStyle,
+];
