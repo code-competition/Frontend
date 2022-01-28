@@ -1,9 +1,15 @@
 .ph-c-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-family: var(--font-button);
   border-radius: var(--border-radius);
   border: none;
   text-align: center;
   white-space: nowrap;
+  transition: 0.5s padding ease;
+  transition: 0.5s width ease;
 
   &--primary {
     background: var(--color-primary-default);
@@ -107,6 +113,14 @@
     &:disabled {
       opacity: 0.2;
     }
+  }
+
+  &--icon-right {
+    flex-direction: row;
+  }
+
+  &--icon-left {
+    flex-direction: row-reverse;
   }
 
   &--small {

@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { WebSocketEvents } from "../../../utils/improvedWebSocket";
 import { EventListener } from "../../../utils/improvedWebSocket";
 import ImprovedWebSocket from "../../../utils/improvedWebSocket";
 import PlayerPlay from "../../../assets/icons/player-play.svg";
 import IconButton, { IconKind } from "../../../components/IconButton";
+import Button, { ButtonKind, IconPlacement } from "../../../components/Button";
 import { ButtonSize } from "../../../components/Button";
 import AnimatedIcon, {
   AnimatedIconKind,
@@ -25,6 +26,9 @@ function TestCode({
   code,
   taskIndex,
 }: TestCodeProps) {
+  const [icon, setIcon] = useState<ReactNode | string>(PlayerPlay);
+  const [iconKind, setIconKind] = useState<IconKind>(IconKind.Image);
+
   const handleClick = () => {
     if (ws !== null) {
       ws.send(
@@ -40,6 +44,15 @@ function TestCode({
         })
       );
     }
+
+    setIcon(
+      <AnimatedIcon
+        kind={AnimatedIconKind.Spinner}
+        size={AnimatedIconSize.Small}
+      />
+    );
+
+    setIconKind(IconKind.ReactNode);
   };
 
   useEffect(() => {
@@ -49,17 +62,12 @@ function TestCode({
     ) {
       ws.addEventListener(WebSocketEvents.Message, listenerId, listener);
     }
-  }, []);
+  }, [ws]);
 
   return (
     <IconButton
-      icon={
-        <AnimatedIcon
-          kind={AnimatedIconKind.Spinner}
-          size={AnimatedIconSize.Small}
-        />
-      }
-      kind={IconKind.ReactNode}
+      icon={icon}
+      kind={iconKind}
       onClick={handleClick}
       btnsize={ButtonSize.Small}
     />

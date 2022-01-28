@@ -1,9 +1,15 @@
 import { HTMLProps, ReactNode } from "react";
+import { IconKind } from "./IconButton";
 
 export enum ButtonSize {
   Small = "small",
   Default = "default",
   Big = "big",
+}
+
+export enum IconPlacement {
+  Left = "left",
+  Right = "right",
 }
 
 export enum ButtonKind {
@@ -16,23 +22,42 @@ export enum ButtonKind {
 }
 
 interface ButtonProps {
+  icon?: ReactNode | string;
+  iconPlacement?: IconPlacement;
+  iconKind?: IconKind;
+  iconAlt?: string;
   btnsize?: ButtonSize;
   type?: "button" | "submit" | "reset";
   kind?: ButtonKind | undefined;
 }
 
-function Home(props: ButtonProps & HTMLProps<HTMLButtonElement>) {
+function Button({
+  btnsize = ButtonSize.Default,
+  kind = ButtonKind.Primary,
+  iconPlacement = IconPlacement.Left,
+  icon,
+  iconAlt = "",
+  iconKind = IconKind.Image,
+  ...props
+}: ButtonProps & HTMLProps<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`${props.className} ph-c-btn ph-c-btn--${
-        props.btnsize === undefined ? ButtonSize.Default : props.btnsize
-      } ph-c-btn--${
-        props.kind === undefined ? ButtonKind.Primary : props.kind
-      }`}
+      className={`${props.className} ph-c-btn ph-c-btn--${btnsize} ph-c-btn--${kind} ph-c-btn--icon-${iconPlacement}`}
     >
       {props.children}
+      {icon !== undefined ? (
+        iconKind === IconKind.Image ? (
+          <img
+            className={`${props.className} ph-c-icon-btn__image ph-c-icon-btn__image--${btnsize}`}
+            src={icon as string}
+            alt={iconAlt}
+          />
+        ) : (
+          icon
+        )
+      ) : null}
     </button>
   );
 }
-export default Home;
+export default Button;
