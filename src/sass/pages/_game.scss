@@ -4,3 +4,27 @@
   justify-content: flex-end;
   gap: 20px;
 }
+
+.ph-p-game__editor-header {
+  @include flex-center;
+}
+
+.ph-p-game__user {
+  @include flex-center;
+  height: 40px;
+  width: max-content;
+  padding: 0 5px;
+  min-width: 40px;
+  border-radius: var(--border-radius);
+
+  & p {
+    display: none;
+  }
+  &:hover p {
+    display: inline;
+  }
+
+  &--finished {
+    border: 5px solid var(--color-positive-default);
+  }
+}

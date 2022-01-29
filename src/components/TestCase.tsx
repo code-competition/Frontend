@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { LogData, LogType } from "../views/Game/Output";
+import { v4 as uuidv4 } from "uuid";
 
 interface TestCaseProps {
   name: string;
@@ -22,7 +23,7 @@ function TestCase({
 }: TestCaseProps) {
   const handleClick = () => {
     let logOutput = (
-      <div>
+      <div key={uuidv4()}>
         <ul className="ph-c-log-message__list">
           <li className="ph-b-code">
             <span className="ph-b-code ph-b-code--bold">Name</span> {name}

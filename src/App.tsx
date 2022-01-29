@@ -13,10 +13,48 @@ function App() {
   let [webSocket, setWebSocket] = useState<ImprovedWebSocket | null>(null);
   let [taskCount, setTaskCount] = useState<number | null>(null);
   let [player, setPlayer] = useState<Player | null>(null);
+  let [connectedUsers, setConnectedUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (webSocket === null) navigate("/");
   }, [webSocket, navigate]);
+
+  const userJoinDisconnectListener = (
+    _: ImprovedWebSocket,
+    ev: MessageEvent<any>
+  ) => {
+    let op = JSON.parse(ev.data).op;
+    let data = JSON.parse(ev.data).d;
+
+    if (op === "GameEvent") {
+      switch (data.op) {
+        case "ConnectedClient":
+          setConnectedUsers((users) => [
+            ...users,
+            { id: data.event.client_id, name: data.event.nickname },
+          ]);
+          break;
+        case "DisconnectedClient":
+          setConnectedUsers((users) =>
+            users.filter((user) => user.id !== data.event.client_id)
+          );
+          break;
+      }
+    }
+  };
+
+  const shutdownListener = (_: ImprovedWebSocket, ev: MessageEvent<any>) => {
+    let op = JSON.parse(ev.data).op;
+    let data = JSON.parse(ev.data).d;
+
+    if (op === "GameEvent" && data.op === "Shutdown") {
+      setConnectedUsers([]);
+      setTaskCount(null);
+      setPlayer(null);
+      setWebSocket(null);
+      navigate("/");
+    }
+  };
 
   return (
     <div className="App">
@@ -29,6 +67,8 @@ function App() {
               setPlayer={setPlayer}
               webSocket={webSocket}
               setWebSocket={setWebSocket}
+              userJoinDisconnectListener={userJoinDisconnectListener}
+              shutdownListener={shutdownListener}
             />
           }
         />
@@ -51,12 +91,19 @@ function App() {
               taskCount={taskCount}
               setTaskCount={setTaskCount}
               player={player}
+              connectedUsers={connectedUsers}
             />
           }
         />
         <Route
           path="/game/:id"
-          element={<Game ws={webSocket} taskCount={taskCount as number} />}
+          element={
+            <Game
+              connectedUsers={connectedUsers}
+              ws={webSocket}
+              taskCount={taskCount as number}
+            />
+          }
         />
       </Routes>
     </div>

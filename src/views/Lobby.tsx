@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Panel, { PanelSize } from "../components/Panel";
 import PanelHeader from "../components/Panel/PanelHeader";
-import { Player } from "../interfaces/game";
+import { Player, User } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import PlayerList from "./Lobby/PlayerList";
 import StartGameButton from "./Lobby/StartGameButton";
@@ -12,9 +12,16 @@ interface LobbyProps {
   taskCount: number | null;
   setTaskCount: Dispatch<SetStateAction<number | null>>;
   player: Player | null;
+  connectedUsers: User[];
 }
 
-function Lobby({ player, ws, taskCount, setTaskCount }: LobbyProps) {
+function Lobby({
+  player,
+  ws,
+  taskCount,
+  setTaskCount,
+  connectedUsers,
+}: LobbyProps) {
   const gameId = useParams().id;
   let navigate = useNavigate();
 
@@ -51,7 +58,7 @@ function Lobby({ player, ws, taskCount, setTaskCount }: LobbyProps) {
         </div>
       </Panel>
 
-      {player?.isHost ? <PlayerList ws={ws} /> : null}
+      <PlayerList connectedUsers={connectedUsers} />
     </div>
   );
 }

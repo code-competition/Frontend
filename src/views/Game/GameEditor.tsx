@@ -6,6 +6,7 @@ import ImprovedWebSocket from "../../utils/improvedWebSocket";
 import { TestOutput } from "../Game";
 import { LogData, LogType } from "./Output";
 import TestCode from "./GameEditor/TestCode";
+import { v4 as uuidv4 } from "uuid";
 
 interface GameEditorProps {
   ws: ImprovedWebSocket | null;
@@ -21,13 +22,14 @@ function GameEditor({
   setLogHistory,
 }: GameEditorProps) {
   let [code, setCode] = useState<string>("");
+  let [isTestFinished, setIsTestFinished] = useState<boolean>(true);
 
   const testResultListener = (_: ImprovedWebSocket, ev: MessageEvent) => {
     let op = JSON.parse(ev.data).op;
     let data = JSON.parse(ev.data).d;
 
     if (op === "Response" && data.op === "Compile") {
-      console.log(data.d);
+      setIsTestFinished(false);
       setTestOutputs(
         data.d.public_test_progress.map((test: PublicTestProgress) => ({
           id: test.test_index,
@@ -43,7 +45,9 @@ function GameEditor({
           {
             type: LogType.Error,
             data: (
-              <p className="ph-b-code ph-b-code--default">{data.d.stderr}</p>
+              <p key={uuidv4()} className="ph-b-code ph-b-code--default">
+                {data.d.stderr}
+              </p>
             ),
           },
         ]);
@@ -56,13 +60,17 @@ function GameEditor({
       className="ph-l-game__editor"
       panelSize={PanelSize.Default}
       headerContent={
-        <TestCode
-          ws={ws}
-          listener={testResultListener}
-          listenerId={"testResult"}
-          code={code}
-          taskIndex={taskIndex}
-        />
+        <div className="ph-p-game__editor-header">
+          <TestCode
+            ws={ws}
+            listener={testResultListener}
+            listenerId={"testResult"}
+            code={code}
+            taskIndex={taskIndex}
+            isTestFinished={isTestFinished}
+            setIsTestFinished={setIsTestFinished}
+          />
+        </div>
       }
     >
       <CodeEditor

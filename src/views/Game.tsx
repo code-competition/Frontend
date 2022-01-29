@@ -5,10 +5,12 @@ import GameEditor from "./Game/GameEditor";
 import TestCases from "./Game/TestCases";
 import Output, { LogData } from "./Game/Output";
 import GameHeader from "./Game/GameHeader";
+import { User } from "../interfaces/game";
 
 interface GameProps {
   ws: ImprovedWebSocket | null;
   taskCount: number;
+  connectedUsers: User[];
 }
 
 export interface PublicTestCase {
@@ -24,7 +26,7 @@ export interface TestOutput {
   hasFailed: boolean;
 }
 
-function Game({ ws, taskCount }: GameProps) {
+function Game({ ws, connectedUsers, taskCount }: GameProps) {
   let [logHistory, setLogHistory] = useState<LogData[]>([]);
 
   let [taskIndex /*, setTaskIndex */] = useState<number>(0);
@@ -67,7 +69,7 @@ function Game({ ws, taskCount }: GameProps) {
 
   return (
     <div className="ph-l-game">
-      <GameHeader />
+      <GameHeader connectedUsers={connectedUsers} />
 
       <div className="ph-l-game__content">
         <Question question={question} />

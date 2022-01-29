@@ -9,9 +9,16 @@ import ImprovedWebSocket, {
 interface JoinGameButtonProps {
   setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
   webSocket: ImprovedWebSocket | null;
+  userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
+  shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
-function JoinGameButton({ webSocket, setWebSocket }: JoinGameButtonProps) {
+function JoinGameButton({
+  webSocket,
+  setWebSocket,
+  userJoinDisconnectListener,
+  shutdownListener,
+}: JoinGameButtonProps) {
   let navigate = useNavigate();
   let [isHello, setIsHello] = useState<boolean>(false);
 
@@ -39,6 +46,16 @@ function JoinGameButton({ webSocket, setWebSocket }: JoinGameButtonProps) {
           "ws://localhost:5000",
           window.location.pathname.replace(/\//gi, "-")
         )
+          .addEventListener(
+            WebSocketEvents.Message,
+            "shutdownListener",
+            shutdownListener
+          )
+          .addEventListener(
+            WebSocketEvents.Message,
+            "userJoinDisconnectListener",
+            userJoinDisconnectListener
+          )
           .addEventListener(
             WebSocketEvents.Message,
             "establishedConnection",

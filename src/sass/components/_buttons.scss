@@ -8,8 +8,7 @@
   border: none;
   text-align: center;
   white-space: nowrap;
-  transition: 0.5s padding ease;
-  transition: 0.5s width ease;
+  width: max-content;
 
   &--primary {
     background: var(--color-primary-default);

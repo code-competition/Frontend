@@ -79,6 +79,11 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
     if (ws !== null) {
       ws.addEventListener(
         WebSocketEvents.Message,
+        "userStartGame",
+        startGameListener
+      );
+      ws.addEventListener(
+        WebSocketEvents.Message,
         "joinGame",
         joinGameListener
       );
