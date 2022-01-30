@@ -9,13 +9,13 @@ import JoinGame from "./views/JoinGame";
 import { Player, User } from "./interfaces/game";
 
 export interface UserEndTime {
-  id: string;
-  finished: number;
+  id: string,
+  finished: number,
 }
 
 export interface GameState {
-  startTime: number;
-  endTimes: UserEndTime[];
+  startTime: number,
+  endTimes: UserEndTime[]
 }
 
 function App() {
@@ -24,63 +24,11 @@ function App() {
   let [taskCount, setTaskCount] = useState<number | null>(null);
   let [player, setPlayer] = useState<Player | null>(null);
   let [connectedUsers, setConnectedUsers] = useState<User[]>([]);
-  let [gameState, setGameState] = useState<GameState | null>(null);
+  let [gameState, setGameState] = useState<User[]>([]);
 
   useEffect(() => {
     if (webSocket === null) navigate("/");
   }, [webSocket, navigate]);
-
-  const userFinishedListener = (
-    _: ImprovedWebSocket,
-    ev: MessageEvent<any>
-  ) => {
-    let op = JSON.parse(ev.data).op;
-    let data = JSON.parse(ev.data).d;
-
-    if (gameState !== null) {
-      if (op === "Response" && data.op === "Compile") {
-        setGameState((prev) => {
-          if (prev === null) {
-            return null;
-          } else {
-            return {
-              ...(prev as GameState),
-              endTimes: [...prev.endTimes, { id: "You", finished: Date.now() }],
-            };
-          }
-        });
-      }
-
-      if (op === "GameEvent" && data.op === "TaskFinished") {
-        setGameState((prev) => {
-          if (prev === null) {
-            return null;
-          } else {
-            return {
-              ...(prev as GameState),
-              endTimes: [
-                ...prev.endTimes,
-                { id: data.event.client_id, finished: Date.now() },
-              ],
-            };
-          }
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (gameState !== null) {
-      if (gameState.endTimes.length === connectedUsers.length + 1) {
-        setConnectedUsers([]);
-        setTaskCount(null);
-        setGameState(null);
-        setPlayer(null);
-        setWebSocket(null);
-        navigate("/");
-      }
-    }
-  }, [gameState, connectedUsers]);
 
   const userJoinDisconnectListener = (
     _: ImprovedWebSocket,
@@ -114,7 +62,6 @@ function App() {
       setConnectedUsers([]);
       setTaskCount(null);
       setPlayer(null);
-      setGameState(null);
       setWebSocket(null);
       navigate("/");
     }
@@ -133,7 +80,6 @@ function App() {
               setWebSocket={setWebSocket}
               userJoinDisconnectListener={userJoinDisconnectListener}
               shutdownListener={shutdownListener}
-              userFinishedListener={userFinishedListener}
             />
           }
         />
@@ -157,7 +103,6 @@ function App() {
               setTaskCount={setTaskCount}
               player={player}
               connectedUsers={connectedUsers}
-              setGameState={setGameState}
             />
           }
         />

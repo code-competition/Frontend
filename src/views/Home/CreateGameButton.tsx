@@ -12,6 +12,7 @@ interface CreateGameProps {
   player: Player | null;
   setPlayer: Dispatch<SetStateAction<Player | null>>;
   userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
+  userFinishedListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
@@ -21,6 +22,7 @@ function CreateGameButton({
   setWebSocket,
   userJoinDisconnectListener,
   shutdownListener,
+  userFinishedListener,
 }: CreateGameProps) {
   let navigate = useNavigate();
 
@@ -86,6 +88,11 @@ function CreateGameButton({
         "ws://localhost:5000",
         window.location.pathname.replace(/\//gi, "-")
       )
+        .addEventListener(
+          WebSocketEvents.Message,
+          "userFinished",
+          userFinishedListener
+        )
         .addEventListener(
           WebSocketEvents.Message,
           "shutdownListener",

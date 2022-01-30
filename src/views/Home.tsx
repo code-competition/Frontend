@@ -10,6 +10,7 @@ interface HomeProps {
   player: Player | null;
   setPlayer: Dispatch<SetStateAction<Player | null>>;
   userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
+  userFinishedListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
@@ -20,6 +21,7 @@ function Home({
   setWebSocket,
   userJoinDisconnectListener,
   shutdownListener,
+  userFinishedListener,
 }: HomeProps) {
   return (
     <main className="ph-p-home">
@@ -30,6 +32,7 @@ function Home({
           setWebSocket={setWebSocket}
           userJoinDisconnectListener={userJoinDisconnectListener}
           shutdownListener={shutdownListener}
+          userFinishedListener={userFinishedListener}
         />
 
         <JoinGameButton
@@ -37,6 +40,7 @@ function Home({
           setWebSocket={setWebSocket}
           userJoinDisconnectListener={userJoinDisconnectListener}
           shutdownListener={shutdownListener}
+          userFinishedListener={userFinishedListener}
         />
       </div>
     </main>

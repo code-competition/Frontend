@@ -10,6 +10,7 @@ interface JoinGameButtonProps {
   setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
   webSocket: ImprovedWebSocket | null;
   userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
+  userFinishedListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
@@ -18,6 +19,7 @@ function JoinGameButton({
   setWebSocket,
   userJoinDisconnectListener,
   shutdownListener,
+  userFinishedListener,
 }: JoinGameButtonProps) {
   let navigate = useNavigate();
   let [isHello, setIsHello] = useState<boolean>(false);
@@ -48,12 +50,17 @@ function JoinGameButton({
         )
           .addEventListener(
             WebSocketEvents.Message,
-            "shutdownListener",
+            "userFinished",
+            userFinishedListener
+          )
+          .addEventListener(
+            WebSocketEvents.Message,
+            "shutdown",
             shutdownListener
           )
           .addEventListener(
             WebSocketEvents.Message,
-            "userJoinDisconnectListener",
+            "userJoinDisconnect",
             userJoinDisconnectListener
           )
           .addEventListener(

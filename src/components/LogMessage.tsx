@@ -1,6 +1,8 @@
 import { LogData } from "../views/Game/Output";
 
-function LogMessage({ type, data }: LogData) {
+interface LogMessageProps extends LogData {}
+
+function LogMessage({ type, data }: LogMessageProps) {
   return (
     <div className={`ph-c-log-message ph-c-log-message--${type}`}>{data}</div>
   );

@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import LogMessage from "../../components/LogMessage";
 import Panel, { PanelKind, PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
+import { v4 as uuidv4 } from "uuid";
 
 export enum LogType {
   Error = "error",
@@ -24,7 +25,7 @@ function Output({ logHistory }: OutputProps) {
   useEffect(() => {
     setOutputHistory(
       logHistory.map((log: LogData) => (
-        <LogMessage type={log.type} data={log.data} />
+        <LogMessage key={uuidv4()} type={log.type} data={log.data} />
       ))
     );
   }, [logHistory]);
