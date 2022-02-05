@@ -1,15 +1,42 @@
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 //Somin was here (låt stå)
 import { GameState } from "../App";
 
-const GameStateContext = createContext<GameState>({});
+export const GameStateContext = createContext<GameStateContextProviderValue>({
+  gameState: {
+    startTime: 0,
+    endTimes: [],
+  },
+  setGameState: (): void => {
+    console.log("Context is not setup properly");
+  },
+});
 
-export function ExampleContextProvider(props) {
-  return (
-    <GameStateContext.Provider value={{ startTime: 0, endTimes: [] }}>
-      {props.children}
-    </GameStateContext.Provider>
-  );
+interface GameStateContextProviderValue {
+  gameState: GameState;
+  setGameState: Dispatch<SetStateAction<GameState>>;
 }
 
-export const useExampleContext = () => useContext<GameState>(GameStateContext);
+export const GameStateContextProvider: FC = ({ children }) => {
+  let [gameState, setGameState] = useState<GameState>({
+    startTime: 0,
+    endTimes: [],
+  });
+
+  useEffect(() => {
+    console.log(gameState);
+  }, [gameState]);
+
+  return (
+    <GameStateContext.Provider value={{ gameState, setGameState }}>
+      {children}
+    </GameStateContext.Provider>
+  );
+};

@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GameState } from "../App";
 import Panel, { PanelSize } from "../components/Panel";
 import PanelHeader from "../components/Panel/PanelHeader";
+import { GameStateContext } from "../contexts/GameState";
 import { Player, User } from "../interfaces/game";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import PlayerList from "./Lobby/PlayerList";
@@ -14,7 +14,6 @@ interface LobbyProps {
   setTaskCount: Dispatch<SetStateAction<number | null>>;
   player: Player | null;
   connectedUsers: User[];
-  setGameState: Dispatch<SetStateAction<GameState | null>>;
 }
 
 function Lobby({
@@ -23,14 +22,13 @@ function Lobby({
   taskCount,
   setTaskCount,
   connectedUsers,
-  setGameState,
 }: LobbyProps) {
   const gameId = useParams().id;
   let navigate = useNavigate();
+  const { setGameState } = useContext(GameStateContext);
 
   useEffect(() => {
     if (ws !== null && taskCount !== null) {
-      console.log("teddsd");
       setGameState({ startTime: Date.now(), endTimes: [] });
       navigate(`/game/${gameId}`);
       ws.removeEventListener(

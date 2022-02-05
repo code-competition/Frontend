@@ -3,16 +3,12 @@ import LogMessage from "../../components/LogMessage";
 import Panel, { PanelKind, PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
 import { v4 as uuidv4 } from "uuid";
+import { LogData } from "../../interfaces/game";
 
 export enum LogType {
   Error = "error",
   Message = "message",
   Result = "result",
-}
-
-export interface LogData {
-  type: LogType;
-  data: ReactNode;
 }
 
 interface OutputProps {

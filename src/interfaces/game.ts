@@ -1,3 +1,6 @@
+import { ReactNode } from "react";
+import { LogType } from "../views/Game/Output";
+
 export interface Task {
   taskIndex: number;
   taskId: string;
@@ -24,4 +27,32 @@ export interface Player {
 export interface User {
   id: string;
   name: string;
+}
+
+export interface UserEndTime {
+  id: string;
+  finished: number;
+}
+
+export interface GameState {
+  startTime: number;
+  endTimes: UserEndTime[];
+}
+
+export interface PublicTestCase {
+  id: number;
+  stdin: string;
+  expected: string;
+}
+
+export interface TestOutput {
+  id: number;
+  got: string;
+  isDone: boolean;
+  hasFailed: boolean;
+}
+
+export interface LogData {
+  type: LogType;
+  data: ReactNode;
 }
