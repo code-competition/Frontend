@@ -1,4 +1,4 @@
-import { LogData } from "../views/Game/Output";
+import { LogData } from "../interfaces/game";
 
 interface LogMessageProps extends LogData {}
 

@@ -2,22 +2,22 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import { WebSocketEvents } from "../../../utils/improvedWebSocket";
 import { EventListener } from "../../../utils/improvedWebSocket";
-import ImprovedWebSocket from "../../../utils/improvedWebSocket";
 import PlayerPlay from "../../../assets/icons/player-play.svg";
-import IconButton, { IconKind } from "../../../components/IconButton";
+import { IconKind } from "../../../components/IconButton";
 import Button, { ButtonSize } from "../../../components/Button";
 import AnimatedIcon, {
   AnimatedIconKind,
   AnimatedIconSize,
 } from "../../../components/AnimatedIcons";
+import { GameStateContext } from "../../../contexts/GameState";
 
 interface TestCodeProps {
-  ws: ImprovedWebSocket | null;
   listener: EventListener<WebSocketEvents.Message>;
   listenerId: string;
   code: string;
@@ -27,7 +27,6 @@ interface TestCodeProps {
 }
 
 function TestCode({
-  ws,
   listener,
   listenerId,
   code,
@@ -35,12 +34,14 @@ function TestCode({
   setIsTestFinished,
   isTestFinished,
 }: TestCodeProps) {
+  const { connection } = useContext(GameStateContext);
+
   const [icon, setIcon] = useState<ReactNode | string>(PlayerPlay);
   const [iconKind, setIconKind] = useState<IconKind>(IconKind.Image);
 
   const handleClick = () => {
-    if (ws !== null && isTestFinished) {
-      ws.send(
+    if (connection !== null && isTestFinished) {
+      connection.send(
         JSON.stringify({
           d: {
             d: {
@@ -74,12 +75,18 @@ function TestCode({
 
   useEffect(() => {
     if (
-      ws !== null &&
-      !ws.getEventListeners(WebSocketEvents.Message).includes(listenerId)
+      connection !== null &&
+      !connection
+        .getEventListeners(WebSocketEvents.Message)
+        .includes(listenerId)
     ) {
-      ws.addEventListener(WebSocketEvents.Message, listenerId, listener);
+      connection.addEventListener(
+        WebSocketEvents.Message,
+        listenerId,
+        listener
+      );
     }
-  }, [ws]);
+  }, [connection]);
 
   return (
     <Button

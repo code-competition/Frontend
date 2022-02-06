@@ -1,28 +1,26 @@
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Button, { ButtonKind, ButtonSize } from "../../components/Button";
+import { GameStateContext } from "../../contexts/GameState";
 import ImprovedWebSocket, {
   EventListener,
   WebSocketEvents,
 } from "../../utils/improvedWebSocket";
 
 interface JoinGameButtonProps {
-  setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
-  webSocket: ImprovedWebSocket | null;
   userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   userFinishedListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
 function JoinGameButton({
-  webSocket,
-  setWebSocket,
   userJoinDisconnectListener,
   shutdownListener,
   userFinishedListener,
 }: JoinGameButtonProps) {
   let navigate = useNavigate();
   let [isHello, setIsHello] = useState<boolean>(false);
+  const { connection, setConnection } = useContext(GameStateContext);
 
   const establishedConnectionListener: EventListener<WebSocketEvents.Message> =
     (instance: ImprovedWebSocket, ev: MessageEvent<any>) => {
@@ -40,10 +38,10 @@ function JoinGameButton({
     };
 
   const handleClick = () => {
-    if (webSocket !== null) {
+    if (connection !== null) {
       navigate(`/joinGame`);
     } else {
-      setWebSocket(
+      setConnection(
         new ImprovedWebSocket(
           "ws://localhost:5000",
           window.location.pathname.replace(/\//gi, "-")
@@ -74,10 +72,10 @@ function JoinGameButton({
   };
 
   useEffect(() => {
-    if (webSocket !== null && isHello) {
+    if (connection !== null && isHello) {
       navigate(`/joinGame`);
     }
-  }, [webSocket, navigate, isHello]);
+  }, [connection, navigate, isHello]);
 
   return (
     <Button

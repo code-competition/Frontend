@@ -1,17 +1,15 @@
-import { ReactNode, useEffect, useState } from "react";
-import { User } from "../../interfaces/game";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { GameStateContext } from "../../contexts/GameState";
 
-interface GameHeaderProps {
-  connectedUsers: User[];
-}
+function GameHeader() {
+  const { users } = useContext(GameStateContext);
 
-function GameHeader({ connectedUsers }: GameHeaderProps) {
   let [userElements, setUserElements] = useState<ReactNode | null>(null);
 
   useEffect(() => {
     setUserElements(
-      connectedUsers.map((user) => (
+      users.map((user) => (
         <div
           className="ph-p-game__user"
           key={uuidv4()}
@@ -23,7 +21,7 @@ function GameHeader({ connectedUsers }: GameHeaderProps) {
         </div>
       ))
     );
-  }, [connectedUsers]);
+  }, [users]);
 
   return <div className="ph-l-game__header">{userElements}</div>;
 }

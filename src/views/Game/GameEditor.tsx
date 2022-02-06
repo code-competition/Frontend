@@ -1,22 +1,19 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import CodeEditor from "../../components/CodeEditor";
 import Panel, { PanelSize } from "../../components/Panel";
-import { PublicTestProgress } from "../../interfaces/game";
+import { LogData, PublicTestProgress, TestOutput } from "../../interfaces/game";
 import ImprovedWebSocket from "../../utils/improvedWebSocket";
-import { TestOutput } from "../Game";
-import { LogData, LogType } from "./Output";
+import { LogType } from "./Output";
 import TestCode from "./GameEditor/TestCode";
 import { v4 as uuidv4 } from "uuid";
 
 interface GameEditorProps {
-  ws: ImprovedWebSocket | null;
   taskIndex: number;
   setTestOutputs: Dispatch<SetStateAction<TestOutput[]>>;
   setLogHistory: Dispatch<SetStateAction<LogData[]>>;
 }
 
 function GameEditor({
-  ws,
   taskIndex,
   setTestOutputs,
   setLogHistory,
@@ -62,7 +59,6 @@ function GameEditor({
       headerContent={
         <div className="ph-p-game__editor-header">
           <TestCode
-            ws={ws}
             listener={testResultListener}
             listenerId={"testResult"}
             code={code}

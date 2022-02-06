@@ -6,23 +6,31 @@ import Lobby from "./views/Lobby";
 import ImprovedWebSocket from "./utils/improvedWebSocket";
 import Game from "./views/Game";
 import JoinGame from "./views/JoinGame";
-import { GameState, Player, User, UserEndTime } from "./interfaces/game";
+import { User, UserFinished } from "./interfaces/game";
 import { GameStateContext } from "./contexts/GameState";
 import Button, { ButtonKind, ButtonSize } from "./components/Button";
+import { getUserFromId } from "./utils/gameState";
 
 function App() {
   let navigate = useNavigate();
-  let [webSocket, setWebSocket] = useState<ImprovedWebSocket | null>(null);
-  let [taskCount, setTaskCount] = useState<number | null>(null);
-  let [player, setPlayer] = useState<Player | null>(null);
-  let [connectedUsers, setConnectedUsers] = useState<User[]>([]);
+
   let [leaderboard, setLeaderboard] = useState<ReactNode[]>([]);
   let [isShowLeaderboard, setIsShowLeaderboard] = useState<boolean>(false);
-  let { gameState, setGameState } = useContext(GameStateContext);
+
+  let {
+    connection,
+    start,
+    you,
+    finishes,
+    users,
+    setFinishes,
+    setUsers,
+    resetGameState,
+  } = useContext(GameStateContext);
 
   useEffect(() => {
-    if (webSocket === null) navigate("/");
-  }, [webSocket, navigate]);
+    if (connection === null) navigate("/");
+  }, [connection, navigate]);
 
   const userFinishedListener = (
     _: ImprovedWebSocket,
@@ -33,49 +41,41 @@ function App() {
 
     if (op === "Response" && data.op === "Compile") {
       if (data.d.is_done) {
-        setGameState((prev: GameState) => {
-          return {
-            ...(prev as GameState),
-            endTimes: [...prev.endTimes, { id: "You", finished: Date.now() }],
-          };
-        });
+        setFinishes((prev: UserFinished[]) => [
+          ...prev,
+          { user: you as User, time: Date.now() },
+        ]);
       }
     }
 
     if (op === "GameEvent" && data.op === "TaskFinished") {
-      setGameState((prev: GameState) => {
-        return {
-          ...(prev as GameState),
-          endTimes: [
-            ...prev.endTimes,
-            { id: data.event.client_id, finished: Date.now() },
-          ],
-        };
-      });
+      let user = getUserFromId(data.event.client_id, users);
+      if (user !== null) {
+        setFinishes((prev: UserFinished[]) => [
+          ...prev,
+          { user: user as User, time: Date.now() },
+        ]);
+      }
     }
   };
 
   useEffect(() => {
-    if (gameState.endTimes.length === connectedUsers.length + 1) {
+    if (finishes.length === users.length + 1) {
       setLeaderboard(
-        gameState.endTimes.map((time: UserEndTime) => {
+        finishes.map((finished: UserFinished) => {
           return (
             <div>
-              <p>Id: {time.id}</p>
-              <p>Time: {(time.finished - gameState.startTime) / 1000}sec</p>
+              <p>Id: {finished.user.name}</p>
+              <p>Time: {(finished.time - start) / 1000}sec</p>
             </div>
           );
         })
       );
       setIsShowLeaderboard(true);
-      setConnectedUsers([]);
-      setTaskCount(null);
-      setGameState({ startTime: 0, endTimes: [] });
-      setPlayer(null);
-      setWebSocket(null);
+      resetGameState();
       navigate("/");
     }
-  }, [gameState, connectedUsers]);
+  }, [users]);
 
   const userJoinDisconnectListener = (
     _: ImprovedWebSocket,
@@ -87,13 +87,17 @@ function App() {
     if (op === "GameEvent") {
       switch (data.op) {
         case "ConnectedClient":
-          setConnectedUsers((users) => [
+          setUsers((users) => [
             ...users,
-            { id: data.event.client_id, name: data.event.nickname },
+            {
+              id: data.event.client_id,
+              name: data.event.nickname,
+              isHost: false,
+            },
           ]);
           break;
         case "DisconnectedClient":
-          setConnectedUsers((users) =>
+          setUsers((users) =>
             users.filter((user) => user.id !== data.event.client_id)
           );
           break;
@@ -106,11 +110,7 @@ function App() {
     let data = JSON.parse(ev.data).d;
 
     if (op === "GameEvent" && data.op === "Shutdown") {
-      setConnectedUsers([]);
-      setTaskCount(null);
-      setPlayer(null);
-      setGameState({ startTime: 0, endTimes: [] });
-      setWebSocket(null);
+      resetGameState();
       navigate("/");
     }
   };
@@ -135,49 +135,15 @@ function App() {
           path="/"
           element={
             <Home
-              player={player}
-              setPlayer={setPlayer}
-              webSocket={webSocket}
-              setWebSocket={setWebSocket}
               userJoinDisconnectListener={userJoinDisconnectListener}
               shutdownListener={shutdownListener}
               userFinishedListener={userFinishedListener}
             />
           }
         />
-        <Route
-          path="/joinGame"
-          element={
-            <JoinGame
-              player={player}
-              setPlayer={setPlayer}
-              ws={webSocket}
-              setTaskCount={setTaskCount}
-            />
-          }
-        />
-        <Route
-          path="/lobby/:id"
-          element={
-            <Lobby
-              ws={webSocket}
-              taskCount={taskCount}
-              setTaskCount={setTaskCount}
-              player={player}
-              connectedUsers={connectedUsers}
-            />
-          }
-        />
-        <Route
-          path="/game/:id"
-          element={
-            <Game
-              connectedUsers={connectedUsers}
-              ws={webSocket}
-              taskCount={taskCount as number}
-            />
-          }
-        />
+        <Route path="/joinGame" element={<JoinGame />} />
+        <Route path="/lobby/:id" element={<Lobby />} />
+        <Route path="/game/:id" element={<Game />} />
       </Routes>
     </div>
   );

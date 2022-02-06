@@ -7,21 +7,11 @@ import {
 } from "react";
 import Panel, { PanelKind, PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
-import TestCase from "../../components/TestCase";
-import { PublicTestCase, TestOutput } from "../Game";
-import { LogData } from "./Output";
-
-export interface TestCaseData {
-  id: number;
-  stdin: string;
-  expected: string;
-  got: string | null;
-  isDone: boolean;
-  hasFailed: boolean;
-}
+import TestCaseElement from "../../components/TestCase";
+import { LogData, TestCase, TestOutput } from "../../interfaces/game";
 
 interface TestCasesProps {
-  publicTestCases: PublicTestCase[];
+  publicTestCases: TestCase[];
   testOutputs: TestOutput[];
   setLogHistory: Dispatch<SetStateAction<LogData[]>>;
 }
@@ -31,12 +21,12 @@ function TestCases({
   testOutputs,
   setLogHistory,
 }: TestCasesProps) {
-  let [testCases, setTestCases] = useState<TestCaseData[]>([]);
+  let [testCases, setTestCases] = useState<TestOutput[]>([]);
   let [testCaseNodes, setTestCaseNodes] = useState<ReactNode[]>([]);
 
   useEffect(() => {
     setTestCases(
-      publicTestCases.map((testCase: PublicTestCase) => {
+      publicTestCases.map((testCase: TestCase) => {
         return {
           id: testCase.id,
           stdin: testCase.stdin,
@@ -51,7 +41,7 @@ function TestCases({
 
   useEffect(() => {
     setTestCases((prev) =>
-      prev.map((testCase: TestCaseData) => {
+      prev.map((testCase: TestOutput) => {
         let currentTestOutput = testOutputs.filter(
           (output: TestOutput) => output.id === testCase.id
         )[0];
@@ -69,9 +59,9 @@ function TestCases({
 
   useEffect(() => {
     setTestCaseNodes(
-      testCases.map((testCase: TestCaseData) => {
+      testCases.map((testCase: TestOutput) => {
         return (
-          <TestCase
+          <TestCaseElement
             key={testCase.id}
             name={testCase.id.toString()}
             stdin={testCase.stdin}

@@ -1,37 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
 import Question from "./Game/Question";
 import GameEditor from "./Game/GameEditor";
 import TestCases from "./Game/TestCases";
-import Output, { LogData } from "./Game/Output";
+import Output from "./Game/Output";
 import GameHeader from "./Game/GameHeader";
-import { User } from "../interfaces/game";
+import { LogData, TestCase, TestOutput } from "../interfaces/game";
+import { GameStateContext } from "../contexts/GameState";
 
-interface GameProps {
-  ws: ImprovedWebSocket | null;
-  taskCount: number;
-  connectedUsers: User[];
-}
-
-export interface PublicTestCase {
-  id: number;
-  stdin: string;
-  expected: string;
-}
-
-export interface TestOutput {
-  id: number;
-  got: string;
-  isDone: boolean;
-  hasFailed: boolean;
-}
-
-function Game({ ws, connectedUsers, taskCount }: GameProps) {
+function Game() {
+  const { connection } = useContext(GameStateContext);
   let [logHistory, setLogHistory] = useState<LogData[]>([]);
 
   let [taskIndex /*, setTaskIndex */] = useState<number>(0);
-
-  let [testCases, setTestCases] = useState<PublicTestCase[]>([]);
+  let [testCases, setTestCases] = useState<TestCase[]>([]);
   let [testOutputs, setTestOutputs] = useState<TestOutput[]>([]);
   let [question, setQuestion] = useState<string>("");
 
@@ -43,39 +25,42 @@ function Game({ ws, connectedUsers, taskCount }: GameProps) {
       let task = data.d.task;
       setQuestion(task.question);
       setTestCases(
-        task.public_test_cases.sort((testCase: PublicTestCase) => testCase.id)
+        task.public_test_cases.sort((testCase: TestCase) => testCase.id)
       );
     }
   };
 
   useEffect(() => {
-    if (ws !== null) {
-      if (!ws.getEventListeners(WebSocketEvents.Message).includes("getTask")) {
-        ws.addEventListener(
+    if (connection !== null) {
+      if (
+        !connection
+          .getEventListeners(WebSocketEvents.Message)
+          .includes("getTask")
+      ) {
+        connection.addEventListener(
           WebSocketEvents.Message,
           "getTask",
           getTaskListener
         );
       }
 
-      ws.send(
+      connection.send(
         JSON.stringify({
           d: { d: { task_index: taskIndex }, op: "Task" },
           op: "Request",
         })
       );
     }
-  }, [taskIndex, ws]);
+  }, [taskIndex, connection]);
 
   return (
     <div className="ph-l-game">
-      <GameHeader connectedUsers={connectedUsers} />
+      <GameHeader />
 
       <div className="ph-l-game__content">
         <Question question={question} />
 
         <GameEditor
-          ws={ws}
           taskIndex={taskIndex}
           setTestOutputs={setTestOutputs}
           setLogHistory={setLogHistory}

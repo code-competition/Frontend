@@ -1,45 +1,30 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Panel, { PanelSize } from "../components/Panel";
 import PanelHeader from "../components/Panel/PanelHeader";
 import { GameStateContext } from "../contexts/GameState";
-import { Player, User } from "../interfaces/game";
-import ImprovedWebSocket, { WebSocketEvents } from "../utils/improvedWebSocket";
+import { WebSocketEvents } from "../utils/improvedWebSocket";
 import PlayerList from "./Lobby/PlayerList";
 import StartGameButton from "./Lobby/StartGameButton";
 
-interface LobbyProps {
-  ws: ImprovedWebSocket | null;
-  taskCount: number | null;
-  setTaskCount: Dispatch<SetStateAction<number | null>>;
-  player: Player | null;
-  connectedUsers: User[];
-}
-
-function Lobby({
-  player,
-  ws,
-  taskCount,
-  setTaskCount,
-  connectedUsers,
-}: LobbyProps) {
+function Lobby() {
   const gameId = useParams().id;
   let navigate = useNavigate();
-  const { setGameState } = useContext(GameStateContext);
+  const { isRunning, connection, you, setStart } = useContext(GameStateContext);
 
   useEffect(() => {
-    if (ws !== null && taskCount !== null) {
-      setGameState({ startTime: Date.now(), endTimes: [] });
+    if (connection !== null && isRunning) {
+      setStart(Date.now());
       navigate(`/game/${gameId}`);
-      ws.removeEventListener(
+      connection.removeEventListener(
         WebSocketEvents.Message,
         "userJoinDisconnectListener"
       );
     }
-  }, [ws, taskCount, navigate, gameId]);
+  }, [connection, isRunning, navigate, gameId]);
 
   return (
-    <div className={`ph-l-lobby ${!player?.isHost ? "ph-l-lobby--user" : ""}`}>
+    <div className={`ph-l-lobby ${!you?.isHost ? "ph-l-lobby--user" : ""}`}>
       <Panel
         className="ph-l-lobby__main"
         panelSize={PanelSize.Big}
@@ -55,13 +40,11 @@ function Lobby({
             <p className="ph-p-game-id__text">{gameId}</p>
           </div>
 
-          {player?.isHost ? (
-            <StartGameButton ws={ws} setTaskCount={setTaskCount} />
-          ) : null}
+          {you?.isHost ? <StartGameButton /> : null}
         </div>
       </Panel>
 
-      <PlayerList connectedUsers={connectedUsers} />
+      <PlayerList />
     </div>
   );
 }

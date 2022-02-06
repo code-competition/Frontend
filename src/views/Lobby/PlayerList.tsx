@@ -1,24 +1,22 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import Panel, { PanelSize } from "../../components/Panel";
 import PanelHeader from "../../components/Panel/PanelHeader";
+import { GameStateContext } from "../../contexts/GameState";
 import { User } from "../../interfaces/game";
 
-interface PlayerListProps {
-  connectedUsers: User[];
-}
-
-function PlayerList({ connectedUsers }: PlayerListProps) {
+function PlayerList() {
   let [userList, setUserList] = useState<ReactElement[]>([]);
+  let { users } = useContext(GameStateContext);
 
   useEffect(() => {
     setUserList(
-      connectedUsers.map((user: User) => (
+      users.map((user: User) => (
         <li key={user.id} className="ph-p-players-list__item">
           {user.name}
         </li>
       ))
     );
-  }, [connectedUsers]);
+  }, [users]);
 
   return (
     <Panel

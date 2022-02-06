@@ -1,28 +1,19 @@
-import {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button, { ButtonKind, ButtonSize } from "../components/Button";
 import Input from "../components/Input";
-import { Player, User } from "../interfaces/game";
+import { GameStateContext } from "../contexts/GameState";
+import { TaskData } from "../interfaces/game";
 import ImprovedWebSocket, {
   WebSocketEvents,
   EventListener,
 } from "../utils/improvedWebSocket";
 
-interface JoinGameProps {
-  ws: ImprovedWebSocket | null;
-  player: Player | null;
-  setPlayer: Dispatch<SetStateAction<Player | null>>;
-  setTaskCount: Dispatch<SetStateAction<number | null>>;
-}
-
-function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
+function JoinGame() {
   let navigate = useNavigate();
+
+  let { connection, you, setIsRunning, setYou, setData } =
+    useContext(GameStateContext);
 
   let [gameId, setGameId] = useState<string>("");
   let [playername, setUsername] = useState<string>("");
@@ -51,7 +42,7 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
             }
             break;
           case "Join":
-            setPlayer({ isHost: false });
+            setYou({ id: "", name: "You", isHost: false });
             break;
         }
         break;
@@ -63,9 +54,17 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
     let data = JSON.parse(ev.data).d;
 
     if (op === "GameEvent" && data.op === "Start") {
-      setTaskCount(data.event.task_count);
-      if (ws !== null)
-        ws.removeEventListener(
+      setData((prev) => {
+        return {
+          ...(prev as TaskData),
+          taskCount: data.event.task_count,
+        };
+      });
+
+      setIsRunning(true);
+
+      if (connection !== null)
+        connection.removeEventListener(
           WebSocketEvents.Message,
           "userStartGame",
           startGameListener
@@ -76,18 +75,18 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (ws !== null) {
-      ws.addEventListener(
+    if (connection !== null) {
+      connection.addEventListener(
         WebSocketEvents.Message,
         "userStartGame",
         startGameListener
       );
-      ws.addEventListener(
+      connection.addEventListener(
         WebSocketEvents.Message,
         "joinGame",
         joinGameListener
       );
-      ws.send(
+      connection.send(
         JSON.stringify({
           d: { d: { nickname: playername }, op: "Identify" },
           op: "Request",
@@ -97,10 +96,10 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
   };
 
   useEffect(() => {
-    if (gameId !== "" && player !== null && ws !== null) {
-      ws.removeEventListener(WebSocketEvents.Message, "joinGame");
+    if (gameId !== "" && you !== null && connection !== null) {
+      connection.removeEventListener(WebSocketEvents.Message, "joinGame");
 
-      ws.addEventListener(
+      connection.addEventListener(
         WebSocketEvents.Message,
         "userStartGame",
         startGameListener
@@ -108,7 +107,7 @@ function JoinGame({ ws, player, setPlayer, setTaskCount }: JoinGameProps) {
 
       navigate(`/lobby/${gameId}`);
     }
-  }, [gameId, player, ws, navigate]);
+  }, [gameId, you, connection, navigate]);
 
   return (
     <div className="ph-p-join-game">

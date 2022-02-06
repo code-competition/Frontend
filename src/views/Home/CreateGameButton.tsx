@@ -1,30 +1,25 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button, { ButtonKind, ButtonSize } from "../../components/Button";
-import { Player } from "../../interfaces/game";
+import { GameStateContext } from "../../contexts/GameState";
 import ImprovedWebSocket, {
   WebSocketEvents,
   EventListener,
 } from "../../utils/improvedWebSocket";
 
 interface CreateGameProps {
-  setWebSocket: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
-  player: Player | null;
-  setPlayer: Dispatch<SetStateAction<Player | null>>;
   userJoinDisconnectListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   userFinishedListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
   shutdownListener(_: ImprovedWebSocket, ev: MessageEvent<any>): void;
 }
 
 function CreateGameButton({
-  player,
-  setPlayer,
-  setWebSocket,
   userJoinDisconnectListener,
   shutdownListener,
   userFinishedListener,
 }: CreateGameProps) {
   let navigate = useNavigate();
+  let { you, setConnection, setYou } = useContext(GameStateContext);
 
   let [ws, setWS] = useState<ImprovedWebSocket | null>(null);
   let [gameId, setGameId] = useState<string>("");
@@ -74,8 +69,8 @@ function CreateGameButton({
             setGameId(newGameId);
             break;
           case "Join":
-            if (data.d.is_host) setPlayer({ isHost: true });
-            else setPlayer({ isHost: false });
+            if (data.d.is_host) setYou({ id: "", name: "You", isHost: true });
+            else setYou({ id: "", name: "You", isHost: false });
             break;
         }
         break;
@@ -113,16 +108,16 @@ function CreateGameButton({
   };
 
   useEffect(() => {
-    if (gameId !== "" && player !== null) {
+    if (gameId !== "" && you !== null) {
       if (ws !== null) {
         ws.removeEventListener(WebSocketEvents.Message, "initiateGame");
-        setWebSocket(ws);
+        setConnection(ws);
         navigate(`/lobby/${gameId}`);
       } else {
         console.log("websocket was null");
       }
     }
-  }, [gameId, player, ws, setWebSocket, navigate]);
+  }, [gameId, you, ws, setConnection, navigate]);
 
   return (
     <Button

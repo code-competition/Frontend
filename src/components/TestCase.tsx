@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { LogData, LogType } from "../views/Game/Output";
+import { LogType } from "../views/Game/Output";
 import { v4 as uuidv4 } from "uuid";
+import { LogData } from "../interfaces/game";
 
 interface TestCaseProps {
   name: string;
@@ -12,7 +13,7 @@ interface TestCaseProps {
   setLogHistory: Dispatch<SetStateAction<LogData[]>>;
 }
 
-function TestCase({
+function TestCaseElement({
   name,
   stdin,
   expected,
@@ -78,4 +79,4 @@ function TestCase({
   );
 }
 
-export default TestCase;
+export default TestCaseElement;
