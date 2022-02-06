@@ -38,7 +38,7 @@ function CreateGameButton({
         // Identify the user after establishing a connection to the server
         instance.send(
           JSON.stringify({
-            d: { d: { nickname: "StarToLeft" }, op: "Identify" },
+            d: { d: { nickname: "Host" }, op: "Identify" },
             op: "Request",
           })
         );
@@ -69,8 +69,9 @@ function CreateGameButton({
             setGameId(newGameId);
             break;
           case "Join":
-            if (data.d.is_host) setYou({ id: "", name: "You", isHost: true });
-            else setYou({ id: "", name: "You", isHost: false });
+            if (data.d.is_host)
+              setYou({ id: "y-o-u", name: "You", isHost: true });
+            else setYou({ id: "y-o-u", name: "You", isHost: false });
             break;
         }
         break;

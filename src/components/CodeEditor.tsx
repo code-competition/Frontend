@@ -1,5 +1,5 @@
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
+//import { javascript } from "@codemirror/lang-javascript";
 import { rust } from "@codemirror/lang-rust";
 import { editorLight } from "../utils/editorThemes/editorLight";
 
@@ -12,8 +12,12 @@ function CodeEditor({ onChange }: CodeEditorProps) {
     <div className="ph-c-editor">
       <div className="ph-c-editor__editing-area">
         <CodeMirror
-          value='fn main() { println!("true"); } '
-          extensions={[javascript({ jsx: true }), rust()]}
+          value={`fn main() { 
+
+  // Your code goes here
+            
+}`}
+          extensions={[rust()]}
           theme={editorLight}
           onChange={onChange}
         />

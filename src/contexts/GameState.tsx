@@ -19,6 +19,7 @@ export const GameStateContext = createContext<GameStateContextProviderValue>({
     taskCount: 0,
     tasks: [],
   },
+  getUsers: () => [{ id: "", name: "", isHost: true }],
   setIsRunning: missingProvider,
   setConnection: missingProvider,
   setYou: missingProvider,
@@ -37,6 +38,7 @@ interface GameStateContextProviderValue {
   start: number;
   finishes: UserFinished[];
   data: TaskData;
+  getUsers(): User[];
   resetGameState(): void;
   setIsRunning: Dispatch<SetStateAction<boolean>>;
   setConnection: Dispatch<SetStateAction<ImprovedWebSocket | null>>;
@@ -60,6 +62,8 @@ export const GameStateContextProvider: FC = ({ children }) => {
     tasks: [],
   });
 
+  const getUsers = () => users;
+
   function resetGameState() {
     setIsRunning(false);
     setConnection(null);
@@ -77,6 +81,7 @@ export const GameStateContextProvider: FC = ({ children }) => {
   return (
     <GameStateContext.Provider
       value={{
+        getUsers,
         isRunning,
         connection,
         you,

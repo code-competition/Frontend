@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import CodeEditor from "../../components/CodeEditor";
 import Panel, { PanelSize } from "../../components/Panel";
 import { LogData, PublicTestProgress, TestOutput } from "../../interfaces/game";
